@@ -1,4 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lost and Found App
+
+A web application for managing lost and found items at universities.
+
+## Setup
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Supabase account
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+```
+
+You can find these values in your Supabase dashboard under Project Settings > API.
+
+### Database Setup
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create the database tables:
+
+```bash
+# Make the script executable
+chmod +x scripts/setup-db.js
+
+# Run the script
+./scripts/setup-db.js
+```
+
+Alternatively, you can run the setup through the API:
+
+```bash
+curl http://localhost:3000/api/setup-db
+```
+
+### Development
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+## Features
+
+- View lost and found items by university
+- Add new lost items with images
+- Delete lost items
+- Search and filter items
+
+## Tech Stack
+
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+- Supabase (PostgreSQL, Storage, Auth)
 
 ## Getting Started
 
