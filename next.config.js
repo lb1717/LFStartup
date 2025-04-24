@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -10,6 +12,8 @@ const nextConfig = {
       },
     ],
   },
+  // Update this to your repository name
+  basePath: '/LFStartup',
 }
 
 module.exports = nextConfig 
