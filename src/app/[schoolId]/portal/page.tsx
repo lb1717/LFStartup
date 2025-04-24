@@ -4,22 +4,14 @@ import { notFound } from 'next/navigation';
 import SchoolPageClient from '../SchoolPageClient';
 
 interface SchoolPageProps {
-  params: {
+  params: Promise<{
     schoolId: string;
-  };
-}
-
-// Generate static params for all universities
-export async function generateStaticParams() {
-  const universities = await getAllUniversities();
-  return universities.map((university) => ({
-    schoolId: university.id,
-  }));
+  }>;
 }
 
 export default async function SchoolPortalPage({ params }: SchoolPageProps) {
   try {
-    const { schoolId } = params;
+    const { schoolId } = await params;
     console.log(`Rendering school portal page for ID: ${schoolId}`);
     
     // Fetch universities and find the current one

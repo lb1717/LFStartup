@@ -4,22 +4,14 @@ import { notFound } from 'next/navigation';
 import LocationsManager from '@/components/LocationsManager';
 
 interface ManageLocationsPageProps {
-  params: {
+  params: Promise<{
     schoolId: string;
-  };
-}
-
-// Generate static params for all universities
-export async function generateStaticParams() {
-  const universities = await getAllUniversities();
-  return universities.map((university) => ({
-    schoolId: university.id,
-  }));
+  }>;
 }
 
 export default async function ManageLocationsPage({ params }: ManageLocationsPageProps) {
   try {
-    const { schoolId } = params;
+    const { schoolId } = await params;
     console.log(`Rendering manage locations page for ID: ${schoolId}`);
     
     // Fetch universities and find the current one

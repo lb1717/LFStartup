@@ -6,22 +6,14 @@ import UniversityImage from '@/components/UniversityImage';
 import { Location } from '@/data/locations';
 
 interface SchoolLandingPageProps {
-  params: {
+  params: Promise<{
     schoolId: string;
-  };
-}
-
-// Generate static params for all universities
-export async function generateStaticParams() {
-  const universities = await getAllUniversities();
-  return universities.map((university) => ({
-    schoolId: university.id,
-  }));
+  }>;
 }
 
 export default async function SchoolLandingPage({ params }: SchoolLandingPageProps) {
   try {
-    const { schoolId } = params;
+    const { schoolId } = await params;
     console.log(`Rendering school landing page for ID: ${schoolId}`);
     
     // Fetch universities and find the current one
