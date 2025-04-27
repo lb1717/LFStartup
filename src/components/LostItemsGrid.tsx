@@ -9,14 +9,15 @@ import AddItemForm from './AddItemForm';
 interface LostItemsGridProps {
   initialItems: LostItem[];
   universityId: string;
+  schoolName: string;
 }
 
-export default function LostItemsGrid({ initialItems, universityId }: LostItemsGridProps) {
+export default function LostItemsGrid({ initialItems, universityId, schoolName }: LostItemsGridProps) {
   const [items, setItems] = useState<LostItem[]>(initialItems);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleAddItem = (itemData: Omit<LostItem, 'id'>) => {
+  const handleAddItem = async (itemData: Omit<LostItem, 'id'>) => {
     const newItem: LostItem = {
       ...itemData,
       id: crypto.randomUUID(),
@@ -65,8 +66,9 @@ export default function LostItemsGrid({ initialItems, universityId }: LostItemsG
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <AddItemForm 
           universityId={universityId}
+          schoolName={schoolName}
           onAddItem={handleAddItem}
-          onClose={() => setIsAddModalOpen(false)}
+          onCancel={() => setIsAddModalOpen(false)}
         />
       </Modal>
     </div>

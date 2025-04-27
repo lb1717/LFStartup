@@ -111,8 +111,9 @@ export default function SchoolPageClient({ university, initialItems }: SchoolPag
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <AddItemForm
           universityId={university.id}
+          schoolName={university.name}
           onAddItem={handleAddItem}
-          onClose={() => setIsAddModalOpen(false)}
+          onCancel={() => setIsAddModalOpen(false)}
         />
       </Modal>
     </main>

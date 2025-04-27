@@ -1,6 +1,62 @@
-# Lost and Found App
+# Lost and Found Application
 
-A web application for managing lost and found items at universities.
+A Next.js application for managing lost and found items across different universities.
+
+## Features
+
+- View lost and found items by university
+- Add new lost items
+- Search for items
+- Manage locations
+
+## Local Development
+
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Create a `.env.local` file with your Supabase credentials:
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+4. Run the development server:
+   ```
+   npm run dev
+   ```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Deployment to GitHub Pages
+
+This project is configured for deployment to GitHub Pages. Follow these steps:
+
+1. Push your code to a GitHub repository
+2. Go to your repository settings
+3. Navigate to "Pages" in the sidebar
+4. Under "Build and deployment", select "GitHub Actions" as the source
+5. Add your Supabase environment variables as repository secrets:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+6. The GitHub Actions workflow will automatically build and deploy your site when you push to the main branch
+
+Your site will be available at: `https://yourusername.github.io/lf-folder/`
+
+## Project Structure
+
+- `src/app`: Next.js app router pages
+- `src/components`: React components
+- `src/lib`: Utility functions and API clients
+- `src/data`: Type definitions and data models
+- `public`: Static assets
+
+## Technologies Used
+
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- Supabase
 
 ## Setup
 
@@ -52,13 +108,6 @@ Start the development server:
 ```bash
 npm run dev
 ```
-
-## Features
-
-- View lost and found items by university
-- Add new lost items with images
-- Delete lost items
-- Search and filter items
 
 ## Tech Stack
 
