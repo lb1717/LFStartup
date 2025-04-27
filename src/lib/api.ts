@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { LostItem } from '@/data/lostItems';
 import { University } from '@/data/universities';
+import { Location } from '@/data/locations';
 
 // Get all universities
 export async function getAllUniversities(): Promise<University[]> {
@@ -153,6 +154,177 @@ export async function deleteLostItem(id: string): Promise<boolean> {
     return true;
   } catch (error) {
     console.error('Exception when deleting lost item:', error);
+    return false;
+  }
+}
+
+// Get locations for a specific university
+export async function getLocationsByUniversity(universityId: string): Promise<Location[]> {
+  try {
+    console.log(`Fetching locations for university: ${universityId}`);
+    const { data, error } = await supabase
+      .from('locations')
+      .select('*')
+      .eq('university_id', universityId);
+    
+    if (error) {
+      console.error('Error fetching locations:', error);
+      return [];
+    }
+    
+    // Convert snake_case to camelCase
+    const locations: Location[] = (data || []).map(location => ({
+      id: location.id,
+      name: location.name,
+      universityId: location.university_id,
+      building: location.building,
+      floor: location.floor,
+      room: location.room,
+      description: location.description,
+      exactAddress: location.exact_address,
+      createdAt: location.created_at
+    }));
+    
+    console.log(`Locations fetched successfully: ${locations.length}`);
+    return locations;
+  } catch (error) {
+    console.error('Exception when fetching locations:', error);
+    return [];
+  }
+}
+
+// Add a new location
+export async function addLocation(location: Omit<Location, 'id'>): Promise<Location | null> {
+  try {
+    console.log('Adding new location:', location.name);
+    
+    // Generate a unique ID for the location
+    const id = crypto.randomUUID();
+    
+    // Convert camelCase to snake_case for database
+    const dbLocation = {
+      id,
+      name: location.name,
+      university_id: location.universityId,
+      building: location.building,
+      floor: location.floor,
+      room: location.room,
+      description: location.description,
+      exact_address: location.exactAddress
+    };
+    
+    // Insert the location into the database
+    const { data, error } = await supabase
+      .from('locations')
+      .insert([dbLocation])
+      .select();
+    
+    if (error) {
+      console.error('Error adding location:', error);
+      throw error;
+    }
+    
+    if (!data || data.length === 0) {
+      throw new Error('Failed to insert location: No data returned');
+    }
+    
+    // Convert snake_case back to camelCase for frontend
+    const frontendLocation: Location = {
+      id: data[0].id,
+      name: data[0].name,
+      universityId: data[0].university_id,
+      building: data[0].building,
+      floor: data[0].floor,
+      room: data[0].room,
+      description: data[0].description,
+      exactAddress: data[0].exact_address,
+      createdAt: data[0].created_at
+    };
+    
+    console.log('Location added successfully:', frontendLocation.id);
+    return frontendLocation;
+  } catch (error: any) {
+    console.error('Exception when adding location:', error);
+    // Re-throw with proper message for better debugging
+    throw new Error(`Failed to add location: ${error.message || JSON.stringify(error)}`);
+  }
+}
+
+// Update a location
+export async function updateLocation(location: Location): Promise<Location | null> {
+  try {
+    console.log('Updating location:', location.id);
+    
+    // Convert camelCase to snake_case for database
+    const dbLocation = {
+      id: location.id,
+      name: location.name,
+      university_id: location.universityId,
+      building: location.building,
+      floor: location.floor,
+      room: location.room,
+      description: location.description,
+      exact_address: location.exactAddress
+    };
+    
+    // Update the location in the database
+    const { data, error } = await supabase
+      .from('locations')
+      .update(dbLocation)
+      .eq('id', location.id)
+      .select();
+    
+    if (error) {
+      console.error('Error updating location:', error);
+      throw new Error(`Error updating location: ${error.message}`);
+    }
+    
+    if (!data || data.length === 0) {
+      console.error('Location not found:', location.id);
+      return null;
+    }
+    
+    // Convert snake_case back to camelCase for frontend
+    const frontendLocation: Location = {
+      id: data[0].id,
+      name: data[0].name,
+      universityId: data[0].university_id,
+      building: data[0].building,
+      floor: data[0].floor,
+      room: data[0].room,
+      description: data[0].description,
+      exactAddress: data[0].exact_address,
+      createdAt: data[0].created_at
+    };
+    
+    console.log('Location updated successfully:', frontendLocation.id);
+    return frontendLocation;
+  } catch (error) {
+    console.error('Exception when updating location:', error);
+    return null;
+  }
+}
+
+// Delete a location
+export async function deleteLocation(id: string): Promise<boolean> {
+  try {
+    console.log(`Deleting location: ${id}`);
+    
+    // Delete the location from the database
+    const { error } = await supabase
+      .from('locations')
+      .delete()
+      .eq('id', id);
+    
+    if (error) {
+      console.error('Error deleting location:', error);
+      throw new Error(`Failed to delete location: ${error.message}`);
+    }
+    
+    console.log('Location deleted successfully:', id);
+    return true;
+  } catch (error) {
+    console.error('Exception when deleting location:', error);
     return false;
   }
 } 

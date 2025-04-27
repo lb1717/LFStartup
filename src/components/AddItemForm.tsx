@@ -1,18 +1,19 @@
 'use client';
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import { LostItem } from '@/data/lostItems';
-import { universities } from '@/data/universities';
 import { supabase } from '@/lib/supabase';
+import { Location } from '@/data/locations';
+import { getLocationsByUniversity } from '@/lib/api';
 
 interface AddItemFormProps {
   universityId: string;
-  schoolName: string;
+  schoolName?: string;
   onAddItem: (item: Omit<LostItem, 'id'>) => Promise<void>;
   onCancel: () => void;
 }
 
-export default function AddItemForm({ universityId, schoolName, onAddItem, onCancel }: AddItemFormProps) {
+export default function AddItemForm({ universityId, schoolName = "", onAddItem, onCancel }: AddItemFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -26,10 +27,56 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedLocationId, setSelectedLocationId] = useState<string>('');
+  const [isOtherLocation, setIsOtherLocation] = useState(false);
+  const [customLocation, setCustomLocation] = useState('');
+
+  // Fetch locations for the university
+  useEffect(() => {
+    async function fetchLocations() {
+      try {
+        setIsLoading(true);
+        const locationData = await getLocationsByUniversity(universityId);
+        setLocations(locationData);
+      } catch (err) {
+        console.error('Error fetching locations:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchLocations();
+  }, [universityId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setSelectedLocationId(value);
+    
+    if (value === 'other') {
+      setIsOtherLocation(true);
+      setFormData(prev => ({ ...prev, location: customLocation }));
+    } else {
+      setIsOtherLocation(false);
+      // Find the location name from the selected ID
+      const selectedLocation = locations.find(loc => loc.id === value);
+      if (selectedLocation) {
+        const locationString = `${selectedLocation.name} (${selectedLocation.building}${selectedLocation.floor ? `, Floor ${selectedLocation.floor}` : ''}${selectedLocation.room ? `, Room ${selectedLocation.room}` : ''})`;
+        setFormData(prev => ({ ...prev, location: locationString }));
+      }
+    }
+  };
+
+  const handleCustomLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCustomLocation(value);
+    setFormData(prev => ({ ...prev, location: value }));
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -124,18 +171,45 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
       </div>
       
       <div>
-        <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="locationSelect" className="block text-sm font-medium text-gray-700 mb-1">
           Location Found
         </label>
-        <input
-          type="text"
-          id="location"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2"
-        />
+        {isLoading ? (
+          <div className="text-gray-500">Loading locations...</div>
+        ) : (
+          <>
+            <select
+              id="locationSelect"
+              value={selectedLocationId}
+              onChange={handleLocationChange}
+              required
+              className="mt-1 block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2"
+            >
+              <option value="" disabled>Select a location</option>
+              {locations.map(location => (
+                <option key={location.id} value={location.id}>
+                  {location.name} ({location.building}
+                  {location.floor ? `, Floor ${location.floor}` : ''}
+                  {location.room ? `, Room ${location.room}` : ''})
+                </option>
+              ))}
+              <option value="other">Other (specify)</option>
+            </select>
+            
+            {isOtherLocation && (
+              <div className="mt-2">
+                <input
+                  type="text"
+                  placeholder="Specify location"
+                  value={customLocation}
+                  onChange={handleCustomLocationChange}
+                  required={isOtherLocation}
+                  className="block w-full rounded-md border-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2"
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
       
       <div>

@@ -5,24 +5,29 @@ import { LostItem } from '@/data/lostItems';
 import LostItemCard from './LostItemCard';
 import Modal from './Modal';
 import AddItemForm from './AddItemForm';
+import { addLostItem } from '@/lib/api';
 
 interface LostItemsGridProps {
   initialItems: LostItem[];
   universityId: string;
+  schoolName?: string;
 }
 
-export default function LostItemsGrid({ initialItems, universityId }: LostItemsGridProps) {
+export default function LostItemsGrid({ initialItems, universityId, schoolName }: LostItemsGridProps) {
   const [items, setItems] = useState<LostItem[]>(initialItems);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleAddItem = (itemData: Omit<LostItem, 'id'>) => {
-    const newItem: LostItem = {
-      ...itemData,
-      id: crypto.randomUUID(),
-    };
-    setItems([...items, newItem]);
-    setIsAddModalOpen(false);
+  const handleAddItem = async (itemData: Omit<LostItem, 'id'>) => {
+    try {
+      const newItem = await addLostItem(itemData);
+      if (newItem) {
+        setItems([...items, newItem]);
+        setIsAddModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Failed to add item:', error);
+    }
   };
 
   const handleDeleteItem = (itemId: string) => {
@@ -65,8 +70,9 @@ export default function LostItemsGrid({ initialItems, universityId }: LostItemsG
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <AddItemForm 
           universityId={universityId}
+          schoolName={schoolName}
           onAddItem={handleAddItem}
-          onClose={() => setIsAddModalOpen(false)}
+          onCancel={() => setIsAddModalOpen(false)}
         />
       </Modal>
     </div>
