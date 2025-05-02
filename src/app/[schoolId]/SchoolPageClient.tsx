@@ -6,7 +6,7 @@ import { LostItem } from '@/data/lostItems';
 import { Location } from '@/data/locations';
 import UniversityImage from '@/components/UniversityImage';
 import LostItemsGrid from '@/components/LostItemsGrid';
-import GoogleMapView from '@/components/GoogleMapView';
+import LocationsListView from '@/components/LocationsListView';
 
 interface SchoolPageClientProps {
   university: University;
@@ -40,7 +40,7 @@ export default function SchoolPageClient({ university, initialItems, locations }
           
           {locations.length > 0 && (
             <div className="w-full max-w-7xl mb-8">
-              <GoogleMapView
+              <LocationsListView
                 locations={locations}
                 university={university.name}
               />

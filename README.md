@@ -8,27 +8,17 @@ A web application for managing lost and found items at universities.
 
 - Node.js 18+ and npm
 - Supabase account
-- Google Maps API key
 
 ### Environment Variables
 
 Create a `.env.local` file in the root directory with the following variables:
 
-```
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 ```
 
 You can find the Supabase values in your Supabase dashboard under Project Settings > API.
-
-For the Google Maps API key:
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a project or select an existing one
-3. Enable the Maps JavaScript API and Geocoding API
-4. Create an API key with appropriate restrictions
-5. Copy the API key to your `.env.local` file
 
 ### Database Setup
 
@@ -64,12 +54,10 @@ npm run dev
 
 ## Features
 
-- View lost and found items by university
-- Add new lost items with images
-- Delete lost items
-- Search and filter items
-- View locations on Google Maps with pins
-- Manage locations with exact addresses
+- View and manage lost items
+- Location management
+- University-specific lost and found pages
+- Responsive design
 
 ## Tech Stack
 
@@ -78,7 +66,6 @@ npm run dev
 - TypeScript
 - Tailwind CSS
 - Supabase (PostgreSQL, Storage, Auth)
-- Google Maps API
 
 ## Getting Started
 
