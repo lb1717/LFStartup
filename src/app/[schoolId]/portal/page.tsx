@@ -5,16 +5,16 @@ import type { Metadata } from 'next';
 import { getUniversityById } from '@/lib/api';
 
 interface SchoolPageProps {
-  params: {
+  params: Promise<{
     schoolId: string;
-  };
+  }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata(
   { params }: SchoolPageProps,
 ): Promise<Metadata> {
-  const { schoolId } = params;
+  const { schoolId } = await params;
   const university = await getUniversityById(schoolId);
 
   if (!university) {
@@ -27,7 +27,7 @@ export async function generateMetadata(
 }
 
 export default async function SchoolPortalPage({ params, searchParams }: SchoolPageProps) {
-  const { schoolId } = params;
+  const { schoolId } = await params;
   
   // Fetch universities and find the current one
   const universities = await getAllUniversities();
