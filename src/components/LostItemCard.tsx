@@ -68,12 +68,10 @@ function formatDate(dateString: string): { display: string; machineReadable: str
 export default function LostItemCard({ item, onDelete, isAdmin }: LostItemCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [dateDisplay, setDateDisplay] = useState({ display: '', machineReadable: '' });
   const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     // Update date display initially
     setDateDisplay(formatDate(item.date));
 
@@ -121,7 +119,7 @@ export default function LostItemCard({ item, onDelete, isAdmin }: LostItemCardPr
   if (showDeleteConfirm) {
     return (
       <div className="bg-white rounded-lg shadow-md p-4 border-2 border-red-200">
-        <h3 className="text-lg font-semibold mb-4">Delete "{item.name}"?</h3>
+        <h3 className="text-lg font-semibold mb-4">Delete &ldquo;{item.name}&rdquo;?</h3>
         <p className="text-gray-600 mb-4">This action cannot be undone.</p>
         <div className="flex justify-end gap-3">
           <button

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { verifyAdminCredentials } from '@/lib/api';
-import { useRouter } from 'next/navigation';
 
 interface AdminLoginModalProps {
   schoolId: string;
@@ -15,7 +14,6 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
