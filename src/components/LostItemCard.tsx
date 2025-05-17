@@ -2,7 +2,6 @@
 
 import { LostItem } from '@/data/lostItems';
 import { useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface LostItemCardProps {
