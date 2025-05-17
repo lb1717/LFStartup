@@ -31,15 +31,23 @@ export async function getUniversityById(universityId: string): Promise<Universit
 export async function getAllUniversities(): Promise<University[]> {
   try {
     console.log('Fetching universities from Supabase...');
-    const { data, error } = await supabase
-      .from('universities')
-      .select('*');
     
-    if (error) {
-      console.error('Error fetching universities:', error);
-      return [];
+    // Using Next.js cache configuration
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/universities?select=*`, {
+      headers: {
+        'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+      },
+      next: {
+        revalidate: 3600 // Cache for 1 hour
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch universities');
     }
-    
+
+    const data = await response.json();
     console.log('Universities fetched successfully:', data?.length || 0);
     return data || [];
   } catch (error) {
