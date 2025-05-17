@@ -5,8 +5,13 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import AdminLoginModal from './AdminLoginModal';
+import { Suspense } from 'react';
 
-export default function Navigation() {
+interface NavigationProps {
+  schoolId: string;
+}
+
+function NavigationContent({ schoolId }: NavigationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
@@ -21,7 +26,7 @@ export default function Navigation() {
   const isSchoolPortalPage = /^\/[^\/]+\/portal$/.test(pathname);
   
   // Get school ID from pathname if we're on a school page
-  const schoolId = isSchoolPage ? pathname.split('/')[1] : '';
+  const schoolIdFromPath = isSchoolPage ? pathname.split('/')[1] : '';
 
   // Check admin status on client side only
   useEffect(() => {
@@ -110,14 +115,14 @@ export default function Navigation() {
                         {/* Dropdown menu */}
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20">
                           <Link
-                            href={`/${schoolId}/manage-locations?admin=true`}
+                            href={`/${schoolIdFromPath}/manage-locations?admin=true`}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             onClick={closeSettingsMenu}
                           >
                             Manage Locations
                           </Link>
                           <Link
-                            href={`/${schoolId}/portal/add-item?admin=true`}
+                            href={`/${schoolIdFromPath}/portal/add-item?admin=true`}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             onClick={closeSettingsMenu}
                           >
@@ -135,7 +140,7 @@ export default function Navigation() {
 
         {showAdminLogin && (
           <AdminLoginModal
-            schoolId={schoolId}
+            schoolId={schoolIdFromPath}
             onClose={() => setShowAdminLogin(false)}
           />
         )}
@@ -180,5 +185,25 @@ export default function Navigation() {
         </div>
       </div>
     </nav>
+  );
+}
+
+export default function Navigation({ schoolId }: NavigationProps) {
+  return (
+    <Suspense fallback={
+      <nav className="bg-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <div className="flex items-center px-2 py-2">
+                <span className="text-xl font-semibold text-gray-300">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    }>
+      <NavigationContent schoolId={schoolId} />
+    </Suspense>
   );
 } 
