@@ -13,12 +13,22 @@ interface AddItemFormProps {
   isSubmitting?: boolean;
 }
 
+function getCurrentDateTime() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 export default function AddItemForm({ universityId, schoolName, onAddItem, onCancel, isSubmitting = false }: AddItemFormProps) {
   const [locations, setLocations] = useState<Location[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     location: '',
-    date: new Date().toISOString().split('T')[0],
+    date: getCurrentDateTime(),
     description: '',
     category: '',
     status: 'unclaimed' as 'unclaimed' | 'claimed' | 'pending'
@@ -89,9 +99,9 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
       </div>
 
       <div>
-        <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date Found</label>
+        <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date & Time Found</label>
         <input
-          type="date"
+          type="datetime-local"
           id="date"
           name="date"
           value={formData.date}

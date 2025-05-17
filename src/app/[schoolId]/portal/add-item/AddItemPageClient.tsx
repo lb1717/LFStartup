@@ -26,10 +26,8 @@ export default function AddItemPageClient({ university }: AddItemPageClientProps
       });
       
       if (newItem) {
-        // Go back to the previous page
-        router.back();
-        // Force a refresh of the page to show the new item
-        router.refresh();
+        // Navigate back to the portal page with a refresh
+        router.replace(`/${university.id}/portal?admin=true`);
       }
     } catch (error) {
       console.error('Failed to add item:', error);
