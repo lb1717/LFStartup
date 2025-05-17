@@ -148,10 +148,10 @@ export default function LocationsManager({ university, initialLocations }: Locat
         <div className="mb-8 flex justify-between items-center">
           <h1 className="text-3xl font-bold">Manage Locations</h1>
           <Link
-            href={`/${university.id}`}
+            href={`/${university.id}/portal`}
             className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition-colors"
           >
-            Back to School Page
+            Back to Portal
           </Link>
         </div>
         

@@ -5,6 +5,7 @@ import { University } from '@/data/universities';
 import { LostItem } from '@/data/lostItems';
 import { Location } from '@/data/locations';
 import LostItemsGrid from '@/components/LostItemsGrid';
+import LocationsList from '@/components/LocationsList';
 import { deleteLostItem } from '@/lib/api';
 
 interface SchoolPageClientProps {
@@ -117,6 +118,8 @@ export default function SchoolPageClient({
           onDelete={handleDeleteItem}
           isAdmin={isAdmin}
         />
+
+        <LocationsList locations={locations} />
       </div>
     </main>
   );
