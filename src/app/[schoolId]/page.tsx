@@ -5,6 +5,7 @@ import UniversityImage from '@/components/UniversityImage';
 import { Location } from '@/data/locations';
 import type { Metadata } from 'next';
 import { getUniversityById } from '@/lib/api';
+import Image from 'next/image';
 
 interface SchoolLandingPageProps {
   params: Promise<{
@@ -82,9 +83,11 @@ export default async function SchoolLandingPage({ params }: SchoolLandingPagePro
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {[1, 2, 3, 4].map((step) => (
                   <div key={step} className="flex flex-col items-center">
-                    <img
+                    <Image
                       src={`/images/tutorial${step}.png`}
                       alt={`Tutorial Step ${step}`}
+                      width={300}
+                      height={200}
                       className="w-full h-auto rounded-lg shadow-md"
                     />
                     <p className="mt-4 text-lg font-medium">
