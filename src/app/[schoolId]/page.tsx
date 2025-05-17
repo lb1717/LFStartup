@@ -1,14 +1,30 @@
-import { use } from 'react';
 import { getAllUniversities, getLocationsByUniversity } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import UniversityImage from '@/components/UniversityImage';
 import { Location } from '@/data/locations';
+import type { Metadata } from 'next';
+import { getUniversityById } from '@/lib/api';
 
 interface SchoolLandingPageProps {
   params: Promise<{
     schoolId: string;
   }>;
+}
+
+export async function generateMetadata(
+  { params }: SchoolLandingPageProps,
+): Promise<Metadata> {
+  const { schoolId } = await params;
+  const university = await getUniversityById(schoolId);
+
+  if (!university) {
+    return {};
+  }
+
+  return {
+    title: `Monventa - ${university.name}`,
+  };
 }
 
 export default async function SchoolLandingPage({ params }: SchoolLandingPageProps) {
@@ -58,6 +74,28 @@ export default async function SchoolLandingPage({ params }: SchoolLandingPagePro
               >
                 Go to Portal
               </Link>
+            </div>
+
+            {/* How Monventa Works Section */}
+            <div className="w-full max-w-4xl mt-8 mb-12 text-center">
+              <h2 className="text-3xl font-bold mb-8">How Monventa Works</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[1, 2, 3, 4].map((step) => (
+                  <div key={step} className="flex flex-col items-center">
+                    <img
+                      src={`/images/tutorial${step}.png`}
+                      alt={`Tutorial Step ${step}`}
+                      className="w-full h-auto rounded-lg shadow-md"
+                    />
+                    <p className="mt-4 text-lg font-medium">
+                      {step === 1 && 'Log in to school portal'}
+                      {step === 2 && 'Look for your lost item'}
+                      {step === 3 && 'Locate your item'}
+                      {step === 4 && 'Collect item at location'}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
             
             {/* Lost and Found Locations */}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { University } from '@/data/universities';
 import { Location } from '@/data/locations';
 import Link from 'next/link';
@@ -26,14 +26,14 @@ export default function LocationsManager({ university, initialLocations }: Locat
   });
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredLocations = useCallback(() => {
+  const filteredLocations = () => {
     return locations.filter(location =>
       location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (location.building && location.building.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (location.description && location.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (location.exactAddress && location.exactAddress.toLowerCase().includes(searchQuery.toLowerCase()))
     );
-  }, [locations, searchQuery]);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -188,7 +188,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
                       Name
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Building
+                      Phone Number
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Floor/Room
@@ -271,7 +271,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
               
               <div className="mb-4">
                 <label htmlFor="building" className="block text-sm font-medium text-gray-700 mb-1">
-                  Building
+                  Phone Number
                 </label>
                 <input
                   type="text"

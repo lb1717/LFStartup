@@ -3,6 +3,30 @@ import { LostItem } from '@/data/lostItems';
 import { University } from '@/data/universities';
 import { Location } from '@/data/locations';
 
+// Get a university by its ID
+export async function getUniversityById(universityId: string): Promise<University | null> {
+  try {
+    console.log(`Fetching university with ID: ${universityId}`);
+    const { data, error } = await supabase
+      .from('universities')
+      .select('*')
+      .eq('id', universityId)
+      .single(); // Use single() to expect one row
+    
+    if (error) {
+      console.error('Error fetching university by ID:', error);
+      return null;
+    }
+    
+    console.log(`University fetched successfully: ${data ? data.name : 'None'}`);
+    // Supabase data is already in camelCase for the University type
+    return data;
+  } catch (error) {
+    console.error('Exception when fetching university by ID:', error);
+    return null;
+  }
+}
+
 // Get all universities
 export async function getAllUniversities(): Promise<University[]> {
   try {
@@ -60,11 +84,9 @@ export async function addLostItem(item: Omit<LostItem, 'id'>): Promise<LostItem 
       name: item.name,
       location: item.location,
       date: item.date,
-      image: item.image,
       university_id: item.universityId,
       school_name: item.schoolName,
       description: item.description,
-      contact_info: item.contactInfo,
       status: item.status,
       category: item.category
     };
@@ -88,11 +110,9 @@ export async function addLostItem(item: Omit<LostItem, 'id'>): Promise<LostItem 
       name: data[0].name,
       location: data[0].location,
       date: data[0].date,
-      image: data[0].image,
       universityId: data[0].university_id,
       schoolName: data[0].school_name,
       description: data[0].description,
-      contactInfo: data[0].contact_info,
       status: data[0].status,
       category: data[0].category
     };
@@ -109,35 +129,6 @@ export async function addLostItem(item: Omit<LostItem, 'id'>): Promise<LostItem 
 export async function deleteLostItem(id: string): Promise<boolean> {
   try {
     console.log(`Deleting lost item: ${id}`);
-    
-    // First, get the item to find the image path
-    const { data: item, error: fetchError } = await supabase
-      .from('lost_items')
-      .select('image, university_id')
-      .eq('id', id)
-      .single();
-    
-    if (fetchError) {
-      console.error('Error fetching item for deletion:', fetchError);
-      throw new Error(`Failed to fetch item for deletion: ${fetchError.message}`);
-    }
-    
-    // Delete the image from storage if it exists
-    if (item.image) {
-      // Extract the file path from the URL
-      const urlParts = item.image.split('/');
-      const fileName = urlParts[urlParts.length - 1];
-      const filePath = `${item.university_id}/${fileName}`;
-      
-      const { error: storageError } = await supabase.storage
-        .from('lost-items-images')
-        .remove([filePath]);
-      
-      if (storageError) {
-        console.error('Error deleting image from storage:', storageError);
-        // Continue with item deletion even if image deletion fails
-      }
-    }
     
     // Delete the item from the database
     const { error: deleteError } = await supabase
@@ -243,10 +234,11 @@ export async function addLocation(location: Omit<Location, 'id'>): Promise<Locat
     
     console.log('Location added successfully:', frontendLocation.id);
     return frontendLocation;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Exception when adding location:', error);
     // Re-throw with proper message for better debugging
-    throw new Error(`Failed to add location: ${error.message || JSON.stringify(error)}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(`Failed to add location: ${errorMessage}`);
   }
 }
 
@@ -325,6 +317,36 @@ export async function deleteLocation(id: string): Promise<boolean> {
     return true;
   } catch (error) {
     console.error('Exception when deleting location:', error);
+    return false;
+  }
+}
+
+// Admin authentication functions
+export async function verifyAdminCredentials(schoolId: string, username: string, password: string): Promise<boolean> {
+  try {
+    console.log('Verifying admin credentials:', { schoolId, username });
+    
+    const { data, error } = await supabase
+      .from('admins')
+      .select('*')
+      .eq('school_id', schoolId)
+      .eq('username', username);
+
+    console.log('Admin query result:', { data, error });
+
+    // If there's any error or no data, just return false
+    if (error || !data || data.length !== 1) {
+      console.log('No admin found or error occurred');
+      return false;
+    }
+
+    // For now, just compare the password directly since we're not hashing yet
+    const isValid = data[0].password_hash === password;
+    console.log('Password verification result:', isValid);
+    
+    return isValid;
+  } catch (error) {
+    console.error('Error verifying admin credentials:', error);
     return false;
   }
 } 

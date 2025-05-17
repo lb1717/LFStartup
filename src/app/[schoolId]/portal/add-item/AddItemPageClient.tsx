@@ -1,0 +1,59 @@
+'use client';
+
+import { University } from '@/data/universities';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import AddItemForm from '@/components/AddItemForm';
+import { addLostItem } from '@/lib/api';
+
+interface AddItemPageClientProps {
+  university: University;
+}
+
+export default function AddItemPageClient({ university }: AddItemPageClientProps) {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleAddItem = async (itemData: any) => {
+    setIsSubmitting(true);
+    try {
+      const newItem = await addLostItem({
+        ...itemData,
+        universityId: university.id,
+        schoolName: university.name,
+        status: 'unclaimed'
+      });
+      
+      if (newItem) {
+        // Go back to the previous page
+        router.back();
+        // Force a refresh of the page to show the new item
+        router.refresh();
+      }
+    } catch (error) {
+      console.error('Failed to add item:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <main className="min-h-screen p-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Add Lost Item</h1>
+          <p className="text-gray-600">Add a new item to the {university.name} lost and found.</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <AddItemForm
+            universityId={university.id}
+            schoolName={university.name}
+            onAddItem={handleAddItem}
+            onCancel={() => router.back()}
+          />
+        </div>
+      </div>
+    </main>
+  );
+} 

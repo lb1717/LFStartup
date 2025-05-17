@@ -1,12 +1,28 @@
-import { use } from 'react';
 import { getAllUniversities, getLostItemsByUniversity, getLocationsByUniversity } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import SchoolPageClient from '../SchoolPageClient';
+import type { Metadata } from 'next';
+import { getUniversityById } from '@/lib/api';
 
 interface SchoolPageProps {
   params: Promise<{
     schoolId: string;
   }>;
+}
+
+export async function generateMetadata(
+  { params }: SchoolPageProps,
+): Promise<Metadata> {
+  const { schoolId } = await params;
+  const university = await getUniversityById(schoolId);
+
+  if (!university) {
+    return {};
+  }
+
+  return {
+    title: `Monventa - ${university.name}`,
+  };
 }
 
 export default async function SchoolPortalPage({ params }: SchoolPageProps) {

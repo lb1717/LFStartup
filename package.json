@@ -10,6 +10,7 @@
     "create-bucket": "node -r dotenv/config src/scripts/create-bucket.js"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@supabase/storage-js": "^2.7.1",
     "@supabase/supabase-js": "^2.49.4",
     "next": "15.3.1",

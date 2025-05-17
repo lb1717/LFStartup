@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { University } from '@/data/universities';
 import { LostItem } from '@/data/lostItems';
 import { Location } from '@/data/locations';
@@ -42,7 +41,6 @@ export default function SchoolPageClient({ university, initialItems, locations }
             <div className="w-full max-w-7xl mb-8">
               <LocationsListView
                 locations={locations}
-                university={university.name}
               />
             </div>
           )}

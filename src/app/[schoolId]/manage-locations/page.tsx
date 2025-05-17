@@ -1,4 +1,3 @@
-import { use } from 'react';
 import { getAllUniversities, getLocationsByUniversity } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import LocationsManager from '@/components/LocationsManager';

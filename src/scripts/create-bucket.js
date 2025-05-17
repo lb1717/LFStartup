@@ -47,7 +47,7 @@ async function createBucket() {
     }
     
     // Create the bucket
-    const { data, error } = await supabase.storage.createBucket('lost-items-images', {
+    const { error } = await supabase.storage.createBucket('lost-items-images', {
       public: true, // Make the bucket public
       fileSizeLimit: 5242880, // 5MB limit
     });
