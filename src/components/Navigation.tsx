@@ -7,10 +7,6 @@ import Image from 'next/image';
 import AdminLoginModal from './AdminLoginModal';
 import { Suspense } from 'react';
 
-interface NavigationProps {
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function NavigationContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
