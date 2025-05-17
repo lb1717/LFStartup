@@ -1,10 +1,6 @@
-import { headers } from 'next/headers';
 import Link from 'next/link';
 
-export default async function NotFound() {
-  const headersList = await headers();
-  const schoolId = headersList.get('x-school-id');
-
+export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8 p-8">
@@ -15,7 +11,7 @@ export default async function NotFound() {
             The page you&apos;re looking for doesn&apos;t exist or has been moved.
           </p>
           <Link
-            href={schoolId ? `/${schoolId}` : '/'}
+            href="/"
             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Return Home
