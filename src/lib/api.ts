@@ -329,7 +329,7 @@ export async function verifyAdminCredentials(schoolId: string, username: string,
     // Fetch admin data from Supabase
     const { data, error } = await supabase
       .from('admins')
-      .select('*')
+      .select('password_hash')
       .eq('school_id', schoolId)
       .eq('username', username)
       .single();
@@ -344,9 +344,9 @@ export async function verifyAdminCredentials(schoolId: string, username: string,
       return false;
     }
     
-    // TODO: Implement proper password hashing
-    // For now, we're doing a direct comparison
-    const isValid = data.password === password;
+    // For now, we'll do a direct comparison with the hashed password
+    // TODO: Implement proper password hashing with bcrypt
+    const isValid = data.password_hash === password;
     
     console.log(`Admin verification result: ${isValid ? 'success' : 'failed'}`);
     return isValid;

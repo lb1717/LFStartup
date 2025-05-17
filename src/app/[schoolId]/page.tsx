@@ -76,12 +76,6 @@ export default async function SchoolLandingPage({ params }: SchoolLandingPagePro
                 >
                   Go to Portal
                 </Link>
-                <Link
-                  href={`/${university.id}/portal?admin=true`}
-                  className="px-8 py-4 bg-gray-500 text-white rounded-lg text-xl font-semibold hover:bg-gray-600 transition-colors shadow-lg"
-                >
-                  Admin Login
-                </Link>
               </div>
             </div>
 

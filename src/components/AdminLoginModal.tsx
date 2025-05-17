@@ -31,6 +31,7 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
       
       if (isValid) {
         router.replace(`/${schoolId}/portal?admin=true`);
+        onClose();
       } else {
         setError('Invalid username or password');
       }
