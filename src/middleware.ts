@@ -2,20 +2,30 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  // Get the pathname from the request
   const pathname = request.nextUrl.pathname;
+  
+  // Extract school ID from the path
+  const pathParts = pathname.split('/').filter(Boolean);
+  const schoolId = pathParts[0] || '';
 
-  // If this is a 404 page, add the school ID to the headers
-  if (pathname === '/404' || pathname === '/_not-found') {
-    const schoolId = pathname.split('/')[1];
-    const response = NextResponse.next();
-    response.headers.set('x-school-id', schoolId || '');
-    return response;
-  }
-
-  return NextResponse.next();
+  // Create response
+  const response = NextResponse.next();
+  
+  // Set school ID in headers for all routes
+  response.headers.set('x-school-id', schoolId);
+  
+  return response;
 }
 
 export const config = {
-  matcher: ['/404', '/_not-found'],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 }; 

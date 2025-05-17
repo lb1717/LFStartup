@@ -1,9 +1,35 @@
-import Link from 'next/link';
-import { headers } from 'next/headers';
+'use client';
 
-export default async function NotFound() {
-  const headersList = await headers();
-  const schoolId = headersList.get('x-school-id') || '';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+
+export default function NotFound() {
+  const pathname = usePathname();
+  const [schoolId, setSchoolId] = useState<string>('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const pathParts = pathname.split('/').filter(Boolean);
+    setSchoolId(pathParts[0] || '');
+    setMounted(true);
+  }, [pathname]);
+
+  // Return a loading state until the component is mounted
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 p-8">
+          <div className="text-center">
+            <div className="h-16 bg-gray-200 rounded w-24 mx-auto mb-4"></div>
+            <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-64 mx-auto mb-8"></div>
+            <div className="h-10 bg-gray-200 rounded w-32 mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
