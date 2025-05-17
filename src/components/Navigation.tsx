@@ -8,10 +8,10 @@ import AdminLoginModal from './AdminLoginModal';
 import { Suspense } from 'react';
 
 interface NavigationProps {
-  schoolId?: string;
 }
 
-function NavigationContent({ schoolId }: NavigationProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function NavigationContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
@@ -188,7 +188,7 @@ function NavigationContent({ schoolId }: NavigationProps) {
   );
 }
 
-export default function Navigation({ schoolId }: NavigationProps) {
+export default function Navigation() {
   return (
     <Suspense fallback={
       <nav className="bg-white shadow-md">
@@ -203,7 +203,7 @@ export default function Navigation({ schoolId }: NavigationProps) {
         </div>
       </nav>
     }>
-      <NavigationContent schoolId={schoolId} />
+      <NavigationContent />
     </Suspense>
   );
 } 
