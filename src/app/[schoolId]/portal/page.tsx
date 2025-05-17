@@ -8,6 +8,7 @@ interface SchoolPageProps {
   params: Promise<{
     schoolId: string;
   }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 export async function generateMetadata(
@@ -25,7 +26,7 @@ export async function generateMetadata(
   };
 }
 
-export default async function SchoolPortalPage({ params }: SchoolPageProps) {
+export default async function SchoolPortalPage({ params, searchParams }: SchoolPageProps) {
   try {
     const { schoolId } = await params;
     console.log(`Rendering school portal page for ID: ${schoolId}`);
@@ -50,11 +51,15 @@ export default async function SchoolPortalPage({ params }: SchoolPageProps) {
     const locations = await getLocationsByUniversity(schoolId);
     console.log(`Found ${locations.length} locations for ${university.name}`);
 
+    // Check admin status from searchParams
+    const isAdmin = searchParams.admin === 'true';
+
     return (
       <SchoolPageClient 
         university={university} 
         initialItems={schoolLostItems} 
-        locations={locations} 
+        locations={locations}
+        isAdmin={isAdmin}
       />
     );
   } catch (error) {

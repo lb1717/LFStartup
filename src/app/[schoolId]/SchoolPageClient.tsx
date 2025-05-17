@@ -13,9 +13,10 @@ interface SchoolPageClientProps {
   university: University;
   initialItems: LostItem[];
   locations: Location[];
+  isAdmin: boolean;
 }
 
-export default function SchoolPageClient({ university, initialItems, locations }: SchoolPageClientProps) {
+export default function SchoolPageClient({ university, initialItems, locations, isAdmin }: SchoolPageClientProps) {
   const handleDeleteItem = async (itemId: string) => {
     try {
       await deleteLostItem(itemId);
@@ -60,6 +61,7 @@ export default function SchoolPageClient({ university, initialItems, locations }
               <LostItemsGrid 
                 items={initialItems}
                 onDelete={handleDeleteItem}
+                isAdmin={isAdmin}
               />
             </Suspense>
           </div>
