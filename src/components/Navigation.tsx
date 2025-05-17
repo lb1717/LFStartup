@@ -8,10 +8,10 @@ import AdminLoginModal from './AdminLoginModal';
 import { Suspense } from 'react';
 
 interface NavigationProps {
-  schoolId: string;
+  schoolId?: string;
 }
 
-function NavigationContent({ schoolId }: NavigationProps) {
+function NavigationContent({}: NavigationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
@@ -203,7 +203,7 @@ export default function Navigation({ schoolId }: NavigationProps) {
         </div>
       </nav>
     }>
-      <NavigationContent schoolId={schoolId} />
+      <NavigationContent />
     </Suspense>
   );
 } 
