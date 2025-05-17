@@ -1,7 +1,7 @@
 'use client';
 
 import { LostItem } from '@/data/lostItems';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
@@ -10,7 +10,7 @@ interface LostItemCardProps {
   onDelete: (itemId: string) => Promise<void>;
 }
 
-export default function LostItemCard({ item, onDelete }: LostItemCardProps) {
+function LostItemCardContent({ item, onDelete }: LostItemCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const searchParams = useSearchParams();
@@ -78,5 +78,24 @@ export default function LostItemCard({ item, onDelete }: LostItemCardProps) {
         </div>
       )}
     </div>
+  );
+}
+
+export default function LostItemCard(props: LostItemCardProps) {
+  return (
+    <Suspense fallback={
+      <div className="relative bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+        <div className="p-4">
+          <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+          <div className="flex justify-between">
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <LostItemCardContent {...props} />
+    </Suspense>
   );
 } 

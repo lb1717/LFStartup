@@ -1,7 +1,7 @@
 'use client';
 
 import { LostItem } from '@/data/lostItems';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { MapPinIcon, TrashIcon } from '@heroicons/react/24/outline';
 
@@ -11,7 +11,7 @@ interface ItemDetailViewProps {
   onClose: () => void;
 }
 
-export default function ItemDetailView({ item, onDelete, onClose }: ItemDetailViewProps) {
+function ItemDetailViewContent({ item, onDelete, onClose }: ItemDetailViewProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const searchParams = useSearchParams();
@@ -110,5 +110,31 @@ export default function ItemDetailView({ item, onDelete, onClose }: ItemDetailVi
         </div>
       )}
     </div>
+  );
+}
+
+export default function ItemDetailView(props: ItemDetailViewProps) {
+  return (
+    <Suspense fallback={
+      <div className="p-6 max-w-2xl mx-auto animate-pulse">
+        <div className="h-8 bg-gray-200 rounded w-3/4 mb-6"></div>
+        <div className="space-y-4">
+          <div>
+            <div className="h-6 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-full"></div>
+          </div>
+          <div>
+            <div className="h-6 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          </div>
+          <div>
+            <div className="h-6 bg-gray-200 rounded w-1/4 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <ItemDetailViewContent {...props} />
+    </Suspense>
   );
 } 
