@@ -1,5 +1,40 @@
-export default function SchoolPageClient({ university, initialItems, locations, isAdmin }: SchoolPageClientProps) {
-  // ... existing state and functions ...
+'use client';
+
+import { useState } from 'react';
+import LostItemsGrid from './LostItemsGrid';
+import UniversityImage from './UniversityImage';
+import AddItemForm from './AddItemForm';
+import { LostItem } from '@/data/lostItems';
+
+interface SchoolPageClientProps {
+  university: {
+    id: string;
+    name: string;
+    logo?: string;
+  };
+  locations: string[];
+  isAdmin: boolean;
+}
+
+export default function SchoolPageClient({ university, locations, isAdmin }: SchoolPageClientProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [filteredItems, setFilteredItems] = useState<LostItem[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleDeleteItem = async (itemId: string) => {
+    // Implementation here
+  };
+
+  const handleAddItem = async (item: Omit<LostItem, 'id'>) => {
+    setIsSubmitting(true);
+    try {
+      // Implementation here
+    } finally {
+      setIsSubmitting(false);
+      setShowAddItemModal(false);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -10,7 +45,7 @@ export default function SchoolPageClient({ university, initialItems, locations, 
             <UniversityImage
               src={university.logo}
               alt={`${university.name} logo`}
-              size="medium"
+              size="large"
             />
           )}
           <h1 className="text-3xl font-bold mt-4">{university.name}</h1>
@@ -48,6 +83,7 @@ export default function SchoolPageClient({ university, initialItems, locations, 
             items={filteredItems}
             onDelete={handleDeleteItem}
             isAdmin={isAdmin}
+            isLoading={false}
           />
         </div>
 
@@ -75,13 +111,18 @@ export default function SchoolPageClient({ university, initialItems, locations, 
 
         {/* Add Item Modal */}
         {showAddItemModal && (
-          <AddItemModal
-            onClose={() => setShowAddItemModal(false)}
-            onAdd={handleAddItem}
-            locations={locations}
-            universityId={university.id}
-            schoolName={university.name}
-          />
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
+              <h2 className="text-xl font-bold mb-4">Add Lost Item</h2>
+              <AddItemForm
+                universityId={university.id}
+                schoolName={university.name}
+                onAddItem={handleAddItem}
+                onCancel={() => setShowAddItemModal(false)}
+                isSubmitting={isSubmitting}
+              />
+            </div>
+          </div>
         )}
       </div>
     </div>
