@@ -2,6 +2,7 @@
 
 import { LostItem } from '@/data/lostItems';
 import LostItemCard from './LostItemCard';
+import { useSearchParams } from 'next/navigation';
 
 interface LostItemsGridProps {
   items: LostItem[];
@@ -9,6 +10,9 @@ interface LostItemsGridProps {
 }
 
 export default function LostItemsGrid({ items, onDelete }: LostItemsGridProps) {
+  const searchParams = useSearchParams();
+  const isAdmin = searchParams.get('admin') === 'true';
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((item) => (
@@ -16,6 +20,7 @@ export default function LostItemsGrid({ items, onDelete }: LostItemsGridProps) {
           key={item.id}
           item={item}
           onDelete={onDelete}
+          isAdmin={isAdmin}
         />
       ))}
     </div>

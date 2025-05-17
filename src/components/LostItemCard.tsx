@@ -8,13 +8,12 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 interface LostItemCardProps {
   item: LostItem;
   onDelete: (itemId: string) => Promise<void>;
+  isAdmin: boolean;
 }
 
-function LostItemCardContent({ item, onDelete }: LostItemCardProps) {
+function LostItemCardContent({ item, onDelete, isAdmin }: LostItemCardProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const searchParams = useSearchParams();
-  const isAdmin = searchParams.get('admin') === 'true';
 
   const handleDelete = async () => {
     if (showDeleteConfirm) {
