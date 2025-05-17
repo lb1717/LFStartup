@@ -6,7 +6,6 @@ import { Location } from '@/data/locations';
 import type { Metadata } from 'next';
 import { getUniversityById } from '@/lib/api';
 import Image from 'next/image';
-import AdminLoginModal from '@/components/AdminLoginModal';
 
 interface SchoolLandingPageProps {
   params: Promise<{
