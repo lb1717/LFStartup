@@ -27,43 +27,29 @@ export async function generateMetadata(
 }
 
 export default async function SchoolPortalPage({ params, searchParams }: SchoolPageProps) {
-  try {
-    const { schoolId } = params;
-    console.log(`Rendering school portal page for ID: ${schoolId}`);
-    
-    // Fetch universities and find the current one
-    const universities = await getAllUniversities();
-    console.log(`Found ${universities.length} universities`);
-    
-    const university = universities.find(u => u.id === schoolId);
-    console.log(`University found: ${!!university}`);
+  const { schoolId } = params;
+  
+  // Fetch universities and find the current one
+  const universities = await getAllUniversities();
+  const university = universities.find(u => u.id === schoolId);
 
-    if (!university) {
-      console.log(`University with ID ${schoolId} not found`);
-      notFound();
-    }
-
-    // Fetch lost items for this university
-    const schoolLostItems = await getLostItemsByUniversity(schoolId);
-    console.log(`Found ${schoolLostItems.length} lost items for ${university.name}`);
-
-    // Fetch locations for this university
-    const locations = await getLocationsByUniversity(schoolId);
-    console.log(`Found ${locations.length} locations for ${university.name}`);
-
-    // Check admin status from searchParams
-    const isAdmin = searchParams.admin === 'true';
-
-    return (
-      <SchoolPageClient 
-        university={university} 
-        initialItems={schoolLostItems} 
-        locations={locations}
-        isAdmin={isAdmin}
-      />
-    );
-  } catch (error) {
-    console.error('Error in SchoolPortalPage:', error);
-    throw error; // Re-throw to let Next.js handle the error
+  if (!university) {
+    notFound();
   }
+
+  // Fetch lost items and locations
+  const schoolLostItems = await getLostItemsByUniversity(schoolId);
+  const locations = await getLocationsByUniversity(schoolId);
+
+  // Simple admin check from URL
+  const isAdmin = searchParams.admin === 'true';
+
+  return (
+    <SchoolPageClient 
+      university={university} 
+      initialItems={schoolLostItems} 
+      locations={locations}
+      isAdmin={isAdmin}
+    />
+  );
 } 

@@ -6,6 +6,7 @@ import { Location } from '@/data/locations';
 import type { Metadata } from 'next';
 import { getUniversityById } from '@/lib/api';
 import Image from 'next/image';
+import AdminLoginModal from '@/components/AdminLoginModal';
 
 interface SchoolLandingPageProps {
   params: Promise<{
@@ -69,12 +70,20 @@ export default async function SchoolLandingPage({ params }: SchoolLandingPagePro
                 Welcome to the {university.name} Lost and Found platform.
               </p>
               
-              <Link 
-                href={`/${university.id}/portal`}
-                className="px-8 py-4 bg-blue-500 text-white rounded-lg text-xl font-semibold hover:bg-blue-600 transition-colors shadow-lg"
-              >
-                Go to Portal
-              </Link>
+              <div className="flex gap-4">
+                <Link 
+                  href={`/${university.id}/portal`}
+                  className="px-8 py-4 bg-blue-500 text-white rounded-lg text-xl font-semibold hover:bg-blue-600 transition-colors shadow-lg"
+                >
+                  Go to Portal
+                </Link>
+                <Link
+                  href={`/${university.id}/portal?admin=true`}
+                  className="px-8 py-4 bg-gray-500 text-white rounded-lg text-xl font-semibold hover:bg-gray-600 transition-colors shadow-lg"
+                >
+                  Admin Login
+                </Link>
+              </div>
             </div>
 
             {/* How Monventa Works Section */}

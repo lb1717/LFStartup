@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { verifyAdminCredentials } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 interface AdminLoginModalProps {
   schoolId: string;
@@ -13,6 +14,12 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +30,7 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
       const isValid = await verifyAdminCredentials(schoolId, username, password);
       
       if (isValid) {
-        window.location.href = `/${schoolId}/portal?admin=true`;
+        router.replace(`/${schoolId}/portal?admin=true`);
       } else {
         setError('Invalid username or password');
       }
@@ -35,8 +42,12 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
     }
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
-    <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4 shadow-xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Admin Login</h2>

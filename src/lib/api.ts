@@ -324,29 +324,34 @@ export async function deleteLocation(id: string): Promise<boolean> {
 // Admin authentication functions
 export async function verifyAdminCredentials(schoolId: string, username: string, password: string): Promise<boolean> {
   try {
-    console.log('Verifying admin credentials:', { schoolId, username });
+    console.log(`Verifying admin credentials for school: ${schoolId}, username: ${username}`);
     
+    // Fetch admin data from Supabase
     const { data, error } = await supabase
       .from('admins')
       .select('*')
       .eq('school_id', schoolId)
-      .eq('username', username);
-
-    console.log('Admin query result:', { data, error });
-
-    // If there's any error or no data, just return false
-    if (error || !data || data.length !== 1) {
-      console.log('No admin found or error occurred');
+      .eq('username', username)
+      .single();
+    
+    if (error) {
+      console.error('Error fetching admin data:', error);
       return false;
     }
-
-    // For now, just compare the password directly since we're not hashing yet
-    const isValid = data[0].password_hash === password;
-    console.log('Password verification result:', isValid);
     
+    if (!data) {
+      console.log('No admin found with the provided credentials');
+      return false;
+    }
+    
+    // TODO: Implement proper password hashing
+    // For now, we're doing a direct comparison
+    const isValid = data.password === password;
+    
+    console.log(`Admin verification result: ${isValid ? 'success' : 'failed'}`);
     return isValid;
   } catch (error) {
-    console.error('Error verifying admin credentials:', error);
+    console.error('Exception when verifying admin credentials:', error);
     return false;
   }
 } 
