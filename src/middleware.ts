@@ -2,18 +2,19 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  // Extract school ID from the pathname
   const pathname = request.nextUrl.pathname;
-  
-  // Extract school ID from the path
   const pathParts = pathname.split('/').filter(Boolean);
-  const schoolId = pathParts[0] || '';
+  const schoolId = pathParts[0];
 
   // Create response
   const response = NextResponse.next();
-  
-  // Set school ID in headers for all routes
-  response.headers.set('x-school-id', schoolId);
-  
+
+  // Set school ID in headers if it exists
+  if (schoolId) {
+    response.headers.set('x-school-id', schoolId);
+  }
+
   return response;
 }
 
