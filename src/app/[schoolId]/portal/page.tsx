@@ -8,7 +8,7 @@ interface SchoolPageProps {
   params: Promise<{
     schoolId: string;
   }>;
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata(
@@ -27,7 +27,7 @@ export async function generateMetadata(
 }
 
 export default async function SchoolPortalPage({ params, searchParams }: SchoolPageProps) {
-  const { schoolId } = await params;
+  const [{ schoolId }, resolvedSearchParams] = await Promise.all([params, searchParams]);
   
   // Fetch universities and find the current one
   const universities = await getAllUniversities();
@@ -42,7 +42,7 @@ export default async function SchoolPortalPage({ params, searchParams }: SchoolP
   const locations = await getLocationsByUniversity(schoolId);
 
   // Simple admin check from URL
-  const isAdmin = searchParams.admin === 'true';
+  const isAdmin = resolvedSearchParams.admin === 'true';
 
   return (
     <SchoolPageClient 
