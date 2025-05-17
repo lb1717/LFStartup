@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddItemForm from '@/components/AddItemForm';
 import { addLostItem } from '@/lib/api';
+import { LostItem } from '@/data/lostItems';
 
 interface AddItemPageClientProps {
   university: University;
@@ -14,7 +15,7 @@ export default function AddItemPageClient({ university }: AddItemPageClientProps
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAddItem = async (itemData: any) => {
+  const handleAddItem = async (itemData: Omit<LostItem, 'id'>) => {
     setIsSubmitting(true);
     try {
       const newItem = await addLostItem({
@@ -51,6 +52,7 @@ export default function AddItemPageClient({ university }: AddItemPageClientProps
             schoolName={university.name}
             onAddItem={handleAddItem}
             onCancel={() => router.back()}
+            isSubmitting={isSubmitting}
           />
         </div>
       </div>

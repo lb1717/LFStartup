@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { verifyAdminCredentials } from '@/lib/api';
 
 interface AdminLoginModalProps {
@@ -14,56 +13,18 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
-  // Add detailed debug logging for component mount
-  console.log('AdminLoginModal Debug:', {
-    schoolId,
-    isMounted: true,
-    props: { schoolId, onClose: typeof onClose }
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Add detailed debug logging for form submission
-    console.log('Login Form Submission:', {
-      schoolId,
-      username,
-      passwordLength: password.length,
-      formData: {
-        schoolId,
-        username,
-        password: '***' // Don't log actual password
-      }
-    });
-
     try {
-      console.log('Calling verifyAdminCredentials with:', {
-        schoolId,
-        username,
-        passwordLength: password.length
-      });
-
       const isValid = await verifyAdminCredentials(schoolId, username, password);
       
-      console.log('verifyAdminCredentials result:', { isValid });
-      
       if (isValid) {
-        console.log('Login successful, storing session and redirecting');
-        // Store admin session in localStorage
-        localStorage.setItem('adminSession', JSON.stringify({
-          schoolId,
-          username,
-          timestamp: new Date().getTime()
-        }));
-        
-        // Redirect to portal with admin parameter
         window.location.href = `/${schoolId}/portal?admin=true`;
       } else {
-        console.log('Login failed: Invalid credentials');
         setError('Invalid username or password');
       }
     } catch (error) {

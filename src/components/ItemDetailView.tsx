@@ -1,8 +1,9 @@
 'use client';
 
 import { LostItem } from '@/data/lostItems';
-import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { MapPinIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 interface ItemDetailViewProps {
   item: LostItem;
@@ -11,43 +12,10 @@ interface ItemDetailViewProps {
 }
 
 export default function ItemDetailView({ item, onDelete, onClose }: ItemDetailViewProps) {
-  const pathname = usePathname();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const checkAdminStatus = () => {
-      const adminSession = localStorage.getItem('adminSession');
-      if (adminSession) {
-        try {
-          const session = JSON.parse(adminSession);
-          // Only check if the session is for the current school
-          if (session.schoolId === item.universityId) {
-            setIsAdmin(true);
-            return;
-          }
-        } catch (error) {
-          console.error('Error parsing admin session:', error);
-        }
-      }
-      setIsAdmin(false);
-    };
-
-    checkAdminStatus();
-    window.addEventListener('storage', checkAdminStatus);
-    return () => window.removeEventListener('storage', checkAdminStatus);
-  }, [item.universityId]);
-
-  // Format date consistently
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  const searchParams = useSearchParams();
+  const isAdmin = searchParams.get('admin') === 'true';
 
   const handleDelete = async () => {
     if (showDeleteConfirm) {
@@ -59,6 +27,7 @@ export default function ItemDetailView({ item, onDelete, onClose }: ItemDetailVi
         console.error('Error deleting item:', error);
       } finally {
         setIsDeleting(false);
+        setShowDeleteConfirm(false);
       }
     } else {
       setShowDeleteConfirm(true);
@@ -66,52 +35,80 @@ export default function ItemDetailView({ item, onDelete, onClose }: ItemDetailVi
   };
 
   return (
-    <div className="flex flex-col">
-      {/* Item details */}
-      <div className="space-y-4">
-        <div>
-          <h2 className="text-2xl font-bold mb-2">{item.name}</h2>
-          <p className="text-gray-600">{item.description}</p>
-        </div>
-
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-sm font-medium text-gray-500">Date Found</h3>
-            <p className="text-lg">{formatDate(item.date)}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-gray-500">Location</h3>
-            <p className="text-lg">{item.location}</p>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-medium text-gray-500">Category</h3>
-            <p className="text-lg">{item.category}</p>
-          </div>
-        </div>
-
-        {/* Delete button - only show for admin users */}
+    <div className="p-6 max-w-2xl mx-auto">
+      <div className="flex justify-between items-start mb-6">
+        <h2 className="text-2xl font-bold">{item.name}</h2>
         {isAdmin && (
-          <div className="pt-4 border-t border-gray-200">
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className={`w-full py-2 px-4 rounded-md text-white font-medium ${
-                isDeleting ? 'bg-gray-400 cursor-not-allowed' :
-                showDeleteConfirm ? 'bg-red-600 hover:bg-red-700' : 'bg-red-500 hover:bg-red-600'
-              }`}
-            >
-              {isDeleting ? 'Deleting...' : showDeleteConfirm ? 'Confirm Delete' : 'Delete Item'}
-            </button>
-            {showDeleteConfirm && !isDeleting && (
-              <p className="text-sm text-red-600 mt-2 text-center">
-                Are you sure you want to delete this item? This action cannot be undone.
-              </p>
-            )}
-          </div>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="p-2 text-red-500 hover:text-red-700 transition-colors"
+            title="Delete item"
+          >
+            <TrashIcon className="w-6 h-6" />
+          </button>
         )}
       </div>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Description</h3>
+          <p className="text-gray-700">{item.description}</p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Location Found</h3>
+          <div className="flex items-center gap-2 text-gray-700">
+            <MapPinIcon className="w-5 h-5" />
+            <span>{item.location}</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Date Found</h3>
+          <p className="text-gray-700">
+            {new Date(item.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Category</h3>
+          <p className="text-gray-700">{item.category}</p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Status</h3>
+          <p className="text-gray-700 capitalize">{item.status}</p>
+        </div>
+      </div>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md mx-4">
+            <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
+            <p className="text-gray-700 mb-6">Are you sure you want to delete this item? This action cannot be undone.</p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-red-400"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

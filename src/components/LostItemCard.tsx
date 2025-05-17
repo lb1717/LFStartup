@@ -1,11 +1,9 @@
 'use client';
 
 import { LostItem } from '@/data/lostItems';
-import { useState, useEffect } from 'react';
-import Modal from './Modal';
-import ItemDetailView from './ItemDetailView';
-import { MapPinIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface LostItemCardProps {
   item: LostItem;
@@ -13,34 +11,12 @@ interface LostItemCardProps {
 }
 
 export default function LostItemCard({ item, onDelete }: LostItemCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const searchParams = useSearchParams();
+  const isAdmin = searchParams.get('admin') === 'true';
 
-  useEffect(() => {
-    setIsAdmin(searchParams.get('admin') === 'true');
-  }, [searchParams]);
-
-  // Format date consistently
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  // Truncate description to fit in one line
-  const truncateDescription = (text: string, maxLength: number = 100) => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength).trim() + '...';
-  };
-
-  const handleDelete = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent opening the detail modal
+  const handleDelete = async () => {
     if (showDeleteConfirm) {
       setIsDeleting(true);
       try {
@@ -57,45 +33,36 @@ export default function LostItemCard({ item, onDelete }: LostItemCardProps) {
   };
 
   return (
-    <>
-      <div 
-        className="flex flex-col p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow cursor-pointer relative"
-        onClick={() => setIsModalOpen(true)}
-      >
-        {isAdmin && (
-          <button
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="absolute top-2 right-2 p-1 text-red-500 hover:text-red-700 transition-colors"
-            title="Delete item"
-          >
-            <TrashIcon className="w-5 h-5" />
-          </button>
-        )}
-        <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-        <div className="text-sm text-gray-600 space-y-2">
-          <div>
-            <p className="font-medium">Description</p>
-            <p className="mt-1 line-clamp-2">{truncateDescription(item.description)}</p>
-          </div>
-          <div>
-            <div className="flex items-center gap-1">
-              <p className="font-medium">Location Found</p>
-              <MapPinIcon className="h-4 w-4 text-gray-500" />
-            </div>
-            <p className="mt-1">{item.location}</p>
-          </div>
+    <div className="relative bg-white rounded-lg shadow-md overflow-hidden">
+      {isAdmin && (
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="absolute top-2 right-2 p-2 text-red-500 hover:text-red-700 transition-colors z-10"
+          title="Delete item"
+        >
+          <TrashIcon className="w-5 h-5" />
+        </button>
+      )}
+      
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
+        <p className="text-gray-600 text-sm mb-2">{item.description}</p>
+        <div className="flex justify-between items-center text-sm text-gray-500">
+          <span>{item.location}</span>
+          <span>{new Date(item.date).toLocaleDateString()}</span>
         </div>
-        {showDeleteConfirm && (
-          <div className="absolute inset-0 bg-white bg-opacity-95 rounded-lg flex flex-col items-center justify-center p-4">
-            <p className="text-red-600 font-medium mb-4">Are you sure you want to delete this item?</p>
-            <div className="flex gap-4">
+      </div>
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-md mx-4">
+            <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
+            <p className="text-gray-700 mb-6">Are you sure you want to delete this item? This action cannot be undone.</p>
+            <div className="flex justify-end gap-4">
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDeleteConfirm(false);
-                }}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 Cancel
               </button>
@@ -108,16 +75,8 @@ export default function LostItemCard({ item, onDelete }: LostItemCardProps) {
               </button>
             </div>
           </div>
-        )}
-      </div>
-
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <ItemDetailView 
-          item={item} 
-          onDelete={onDelete} 
-          onClose={() => setIsModalOpen(false)} 
-        />
-      </Modal>
-    </>
+        </div>
+      )}
+    </div>
   );
 } 
