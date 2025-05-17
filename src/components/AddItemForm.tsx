@@ -10,9 +10,10 @@ interface AddItemFormProps {
   schoolName?: string;
   onAddItem: (item: Omit<LostItem, 'id'>) => Promise<void>;
   onCancel: () => void;
+  isSubmitting?: boolean;
 }
 
-export default function AddItemForm({ universityId, schoolName, onAddItem, onCancel }: AddItemFormProps) {
+export default function AddItemForm({ universityId, schoolName, onAddItem, onCancel, isSubmitting = false }: AddItemFormProps) {
   const [locations, setLocations] = useState<Location[]>([]);
   const [formData, setFormData] = useState({
     name: '',
@@ -144,15 +145,17 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+          disabled={isSubmitting}
+          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          disabled={isSubmitting}
+          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Add Item
+          {isSubmitting ? 'Adding Item...' : 'Add Item'}
         </button>
       </div>
     </form>
