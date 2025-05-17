@@ -78,12 +78,15 @@ export async function addLostItem(item: Omit<LostItem, 'id'>): Promise<LostItem 
     // Generate a unique ID for the item
     const id = crypto.randomUUID();
     
+    // Ensure the date is in ISO format
+    const date = new Date(item.date).toISOString();
+    
     // Convert camelCase to snake_case for database
     const dbItem = {
       id,
       name: item.name,
       location: item.location,
-      date: item.date,
+      date,
       university_id: item.universityId,
       school_name: item.schoolName,
       description: item.description,
@@ -109,7 +112,7 @@ export async function addLostItem(item: Omit<LostItem, 'id'>): Promise<LostItem 
       id: data[0].id,
       name: data[0].name,
       location: data[0].location,
-      date: data[0].date,
+      date: new Date(data[0].date).toISOString(), // Ensure consistent date format
       universityId: data[0].university_id,
       schoolName: data[0].school_name,
       description: data[0].description,

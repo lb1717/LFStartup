@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS public.lost_items (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   location TEXT NOT NULL,
-  date DATE NOT NULL,
+  date TIMESTAMP WITH TIME ZONE NOT NULL,
   image TEXT,
   university_id TEXT NOT NULL REFERENCES public.universities(id),
   school_name TEXT NOT NULL,
