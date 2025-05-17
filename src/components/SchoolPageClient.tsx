@@ -39,9 +39,11 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
   useEffect(() => {
     const filtered = items.filter(item => {
       const searchLower = searchQuery.toLowerCase();
-      const matchesSearch = 
-        item.name.toLowerCase().includes(searchLower) ||
-        (item.description?.toLowerCase() || '').includes(searchLower);
+      const nameMatch = item.name.toLowerCase().includes(searchLower);
+      const descriptionMatch = item.description 
+        ? item.description.toLowerCase().includes(searchLower)
+        : false;
+      const matchesSearch = nameMatch || descriptionMatch;
       const matchesLocation = !selectedLocation || item.location === selectedLocation;
       const matchesCategory = !selectedCategory || item.category === selectedCategory;
       return matchesSearch && matchesLocation && matchesCategory;
