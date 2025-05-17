@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LostItemsGrid from './LostItemsGrid';
 import UniversityImage from './UniversityImage';
 import AddItemForm from './AddItemForm';
 import { LostItem } from '@/data/lostItems';
+import { getLostItemsByUniversity, deleteLostItem, addLostItem } from '@/lib/api';
 
 interface SchoolPageClientProps {
   university: {
@@ -19,20 +20,56 @@ interface SchoolPageClientProps {
 export default function SchoolPageClient({ university, locations, isAdmin }: SchoolPageClientProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [items, setItems] = useState<LostItem[]>([]);
   const [filteredItems, setFilteredItems] = useState<LostItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  // Fetch items on component mount
+  useEffect(() => {
+    const fetchItems = async () => {
+      const fetchedItems = await getLostItemsByUniversity(university.id);
+      setItems(fetchedItems);
+    };
+    fetchItems();
+  }, [university.id]);
+
+  // Filter items when search query, items, location, or category changes
+  useEffect(() => {
+    const filtered = items.filter(item => {
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = 
+        item.name.toLowerCase().includes(searchLower) ||
+        (item.description?.toLowerCase() || '').includes(searchLower);
+      const matchesLocation = !selectedLocation || item.location === selectedLocation;
+      const matchesCategory = !selectedCategory || item.category === selectedCategory;
+      return matchesSearch && matchesLocation && matchesCategory;
+    });
+    setFilteredItems(filtered);
+  }, [searchQuery, items, selectedLocation, selectedCategory]);
 
   const handleDeleteItem = async (itemId: string) => {
-    // Implementation here
+    try {
+      await deleteLostItem(itemId);
+      setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
   };
 
-  const handleAddItem = async (item: Omit<LostItem, 'id'>) => {
+  const handleAddItem = async (newItemData: Omit<LostItem, 'id'>) => {
     setIsSubmitting(true);
     try {
-      // Implementation here
+      const newItem = await addLostItem(newItemData);
+      if (newItem) {
+        setItems(prevItems => [...prevItems, newItem]);
+        setShowAddItemModal(false);
+      }
+    } catch (error) {
+      console.error('Error adding item:', error);
     } finally {
       setIsSubmitting(false);
-      setShowAddItemModal(false);
     }
   };
 
@@ -51,8 +88,9 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
           <h1 className="text-3xl font-bold mt-4">{university.name}</h1>
         </div>
 
-        {/* Search Bar */}
-        <div className="w-full max-w-2xl">
+        {/* Search and Filters */}
+        <div className="w-full max-w-2xl space-y-4">
+          {/* Search Bar */}
           <div className="relative">
             <input
               type="text"
@@ -74,6 +112,43 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-4">
+            <select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">All Locations</option>
+              {locations.map(location => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">All Categories</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Bags & Backpacks">Bags & Backpacks</option>
+              <option value="Books & Study Materials">Books & Study Materials</option>
+              <option value="Clothing & Shoes">Clothing & Shoes</option>
+              <option value="Headphones & Earbuds">Headphones & Earbuds</option>
+              <option value="ID Cards & Keys">ID Cards & Keys</option>
+              <option value="Jewelry">Jewelry</option>
+              <option value="Musical Instruments">Musical Instruments</option>
+              <option value="Sports Equipment">Sports Equipment</option>
+              <option value="Wallets & Purses">Wallets & Purses</option>
+              <option value="Water Bottles & Containers">Water Bottles & Containers</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
 

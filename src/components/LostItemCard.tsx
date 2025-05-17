@@ -157,9 +157,9 @@ export default function LostItemCard({ item, onDelete, isAdmin }: LostItemCardPr
           isExpanded ? 'shadow-lg' : ''
         } cursor-pointer`}
         onClick={handleCardClick}
-        role="region"
-        aria-expanded={isExpanded}
-        aria-label="Lost item details"
+        role="button"
+        aria-label={`Lost item: ${item.name}`}
+        aria-pressed={isExpanded}
       >
         {isAdmin && (
           <button
