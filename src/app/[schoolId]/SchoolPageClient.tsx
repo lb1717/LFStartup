@@ -36,8 +36,12 @@ export default function SchoolPageClient({
   };
 
   const filteredItems = items.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchLower = searchQuery.toLowerCase();
+    const nameMatch = item.name.toLowerCase().includes(searchLower);
+    const descriptionMatch = item.description 
+      ? item.description.toLowerCase().includes(searchLower)
+      : false;
+    const matchesSearch = nameMatch || descriptionMatch;
     const matchesLocation = !selectedLocation || item.location === selectedLocation;
     const matchesCategory = !selectedCategory || item.category === selectedCategory;
     return matchesSearch && matchesLocation && matchesCategory;
