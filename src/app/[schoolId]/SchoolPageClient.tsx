@@ -6,6 +6,7 @@ import { Location } from '@/data/locations';
 import UniversityImage from '@/components/UniversityImage';
 import LostItemsGrid from '@/components/LostItemsGrid';
 import LocationsListView from '@/components/LocationsListView';
+import { deleteLostItem } from '@/lib/api';
 
 interface SchoolPageClientProps {
   university: University;
@@ -14,6 +15,15 @@ interface SchoolPageClientProps {
 }
 
 export default function SchoolPageClient({ university, initialItems, locations }: SchoolPageClientProps) {
+  const handleDeleteItem = async (itemId: string) => {
+    try {
+      await deleteLostItem(itemId);
+      // The page will be refreshed by the parent component
+    } catch (error) {
+      console.error('Error deleting item:', error);
+    }
+  };
+
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
@@ -31,9 +41,8 @@ export default function SchoolPageClient({ university, initialItems, locations }
           
           <div className="w-full max-w-7xl mb-12">
             <LostItemsGrid 
-              initialItems={initialItems}
-              universityId={university.id}
-              schoolName={university.name}
+              items={initialItems}
+              onDelete={handleDeleteItem}
             />
           </div>
           
