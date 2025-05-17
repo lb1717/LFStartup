@@ -11,7 +11,7 @@ interface NavigationProps {
   schoolId?: string;
 }
 
-function NavigationContent({}: NavigationProps) {
+function NavigationContent({ schoolId }: NavigationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
@@ -203,7 +203,7 @@ export default function Navigation({ schoolId }: NavigationProps) {
         </div>
       </nav>
     }>
-      <NavigationContent />
+      <NavigationContent schoolId={schoolId} />
     </Suspense>
   );
 } 
