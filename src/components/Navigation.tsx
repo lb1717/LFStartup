@@ -10,7 +10,6 @@ import { Suspense } from 'react';
 function NavigationContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   

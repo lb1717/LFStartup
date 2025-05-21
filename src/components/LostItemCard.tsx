@@ -4,6 +4,7 @@ import { LostItem } from '@/data/lostItems';
 import { Location } from '@/data/locations';
 import { useState, useEffect } from 'react';
 import { PencilIcon, TrashIcon, CheckIcon } from '@heroicons/react/24/solid';
+import { updateLostItem } from '@/lib/api';
 
 interface LostItemCardProps {
   item: LostItem;

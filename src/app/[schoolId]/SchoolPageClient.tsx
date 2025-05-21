@@ -28,8 +28,6 @@ export default function SchoolPageClient({
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState<'title-asc' | 'title-desc' | 'location-asc' | 'location-desc' | 'newest' | 'oldest'>('newest');
-  const [showAddItemModal, setShowAddItemModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDeleteItem = async (itemId: string) => {
     try {
