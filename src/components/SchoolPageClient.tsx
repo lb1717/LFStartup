@@ -5,6 +5,7 @@ import LostItemsGrid from './LostItemsGrid';
 import UniversityImage from './UniversityImage';
 import AddItemForm from './AddItemForm';
 import { LostItem } from '@/data/lostItems';
+import { Location } from '@/data/locations';
 import { getLostItemsByUniversity, deleteLostItem, addLostItem } from '@/lib/api';
 
 interface SchoolPageClientProps {
@@ -13,7 +14,7 @@ interface SchoolPageClientProps {
     name: string;
     logo?: string;
   };
-  locations: string[];
+  locations: Location[];
   isAdmin: boolean;
 }
 
@@ -26,7 +27,6 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sortBy, setSortBy] = useState<'title-asc' | 'title-desc' | 'location-asc' | 'location-desc' | 'newest' | 'oldest'>('newest');
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
   // Fetch items on component mount
   useEffect(() => {
@@ -147,6 +147,7 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
             onDelete={handleDeleteItem}
             isAdmin={isAdmin}
             isLoading={false}
+            locations={locations}
           />
         </div>
 
