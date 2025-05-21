@@ -65,110 +65,118 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Item Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">Add Found Item</h2>
+        <p className="mt-2 text-gray-600">Add new item that has been found and stored with {schoolName} officials</p>
       </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Item Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            placeholder="eg., Pink Ipad Case, Digital Watch with Dark Green Band"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location Found</label>
-        <select
-          id="location"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          <option value="">Select a location</option>
-          {locations.map(location => (
-            <option key={location.id} value={location.name}>
-              {location.name}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div>
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location Found</label>
+          <select
+            id="location"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+          >
+            <option value="">Select a location</option>
+            {locations.map(location => (
+              <option key={location.id} value={location.name}>
+                {location.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <div>
-        <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date & Time Found</label>
-        <input
-          type="datetime-local"
-          id="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          max={getCurrentDateTime()}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
-      </div>
+        <div>
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date & Time Found</label>
+          <input
+            type="datetime-local"
+            id="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            max={getCurrentDateTime()}
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+          />
+        </div>
 
-      <div>
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
-        <select
-          id="category"
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        >
-          <option value="" disabled>Select a category</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Accessories">Accessories</option>
-          <option value="Bags & Backpacks">Bags & Backpacks</option>
-          <option value="Books & Study Materials">Books & Study Materials</option>
-          <option value="Clothing & Shoes">Clothing & Shoes</option>
-          <option value="Headphones & Earbuds">Headphones & Earbuds</option>
-          <option value="ID Cards & Keys">ID Cards & Keys</option>
-          <option value="Jewelry">Jewelry</option>
-          <option value="Musical Instruments">Musical Instruments</option>
-          <option value="Sports Equipment">Sports Equipment</option>
-          <option value="Wallets & Purses">Wallets & Purses</option>
-          <option value="Water Bottles & Containers">Water Bottles & Containers</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+        <div>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+          >
+            <option value="" disabled>Select a category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Bags & Backpacks">Bags & Backpacks</option>
+            <option value="Books & Study Materials">Books & Study Materials</option>
+            <option value="Clothing & Shoes">Clothing & Shoes</option>
+            <option value="Headphones & Earbuds">Headphones & Earbuds</option>
+            <option value="ID Cards & Keys">ID Cards & Keys</option>
+            <option value="Jewelry">Jewelry</option>
+            <option value="Musical Instruments">Musical Instruments</option>
+            <option value="Sports Equipment">Sports Equipment</option>
+            <option value="Wallets & Purses">Wallets & Purses</option>
+            <option value="Water Bottles & Containers">Water Bottles & Containers</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-      <div className="mb-4">
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-          rows={3}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-        />
-      </div>
+        <div className="mb-4">
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            rows={3}
+            placeholder="White Apple Pencil with intials marked in blue"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+          />
+        </div>
 
-      <div className="flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={onCancel}
-          disabled={isSubmitting}
-          className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Adding Item...' : 'Add Item'}
-        </button>
-      </div>
-    </form>
+        <div className="flex justify-end space-x-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={isSubmitting}
+            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Adding Item...' : 'Add Item'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 } 

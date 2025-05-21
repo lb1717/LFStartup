@@ -39,11 +39,6 @@ export default function AddItemPageClient({ university }: AddItemPageClientProps
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Add Lost Item</h1>
-          <p className="text-gray-600">Add a new item to the {university.name} lost and found.</p>
-        </div>
-
         <div className="bg-white rounded-lg shadow-md p-6">
           <AddItemForm
             universityId={university.id}

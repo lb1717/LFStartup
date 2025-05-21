@@ -20,7 +20,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
     name: '',
     building: '',
     floor: '',
-    room: '',
     description: '',
     exactAddress: ''
   });
@@ -45,7 +44,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
       name: '',
       building: '',
       floor: '',
-      room: '',
       description: '',
       exactAddress: ''
     });
@@ -69,7 +67,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
       name: location.name,
       building: location.building,
       floor: location.floor || '',
-      room: location.room || '',
       description: location.description || '',
       exactAddress: location.exactAddress || ''
     });
@@ -89,7 +86,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
           universityId: university.id,
           building: formData.building,
           floor: formData.floor || undefined,
-          room: formData.room || undefined,
           description: formData.description || undefined,
           exactAddress: formData.exactAddress || undefined
         });
@@ -107,7 +103,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
           universityId: university.id,
           building: formData.building,
           floor: formData.floor || undefined,
-          room: formData.room || undefined,
           description: formData.description || undefined,
           exactAddress: formData.exactAddress || undefined
         });
@@ -191,9 +186,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
                       Phone Number
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Floor/Room
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Address
                     </th>
                     <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -209,13 +201,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">{location.building}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">
-                          {location.floor && `Floor: ${location.floor}`}
-                          {location.floor && location.room && ', '}
-                          {location.room && `Room: ${location.room}`}
-                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-500">{location.exactAddress}</div>
@@ -264,6 +249,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
+                  placeholder="e.g., University Library, College Hall"
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -271,7 +257,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
               
               <div className="mb-4">
                 <label htmlFor="building" className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone Number
+                  Building
                 </label>
                 <input
                   type="text"
@@ -279,38 +265,26 @@ export default function LocationsManager({ university, initialLocations }: Locat
                   name="building"
                   value={formData.building}
                   onChange={handleInputChange}
+                  placeholder="e.g., Lobby Security Desk, Classroom 1A"
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               
-              <div className="mb-4 grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="floor" className="block text-sm font-medium text-gray-700 mb-1">
-                    Floor (optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="floor"
-                    name="floor"
-                    value={formData.floor}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="room" className="block text-sm font-medium text-gray-700 mb-1">
-                    Room (optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="room"
-                    name="room"
-                    value={formData.room}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
+              <div className="mb-4">
+                <label htmlFor="floor" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  id="floor"
+                  name="floor"
+                  value={formData.floor}
+                  onChange={handleInputChange}
+                  placeholder="e.g., (555) 555-1234"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
               </div>
               
               <div className="mb-4">
@@ -323,7 +297,8 @@ export default function LocationsManager({ university, initialLocations }: Locat
                   name="exactAddress"
                   value={formData.exactAddress}
                   onChange={handleInputChange}
-                  placeholder="e.g., 123 Main St, Cambridge, MA 02138"
+                  placeholder="e.g., 123 Street, City, MA 01234"
+                  required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -337,6 +312,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
+                  placeholder="e.g., Enter the library through the main entryway, walk down the stairs on the right and the third room on your left"
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />

@@ -1,5 +1,5 @@
 import { Location } from '@/data/locations';
-import { MapPinIcon } from '@heroicons/react/24/solid';
+import { MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
 
 interface LocationsListProps {
   locations: Location[];
@@ -34,10 +34,13 @@ export default function LocationsList({ locations }: LocationsListProps) {
             >
               <div className="flex-1 min-w-0 pr-4">
                 <h3 className="font-medium truncate">{location.name}</h3>
+                <p className="text-sm text-gray-600 truncate flex items-center gap-1">
+                  <PhoneIcon className="h-4 w-4 text-gray-500" />
+                  {location.floor}
+                </p>
                 <p className="text-sm text-gray-600 truncate">
-                  {location.building}
-                  {location.floor && `, Floor ${location.floor}`}
-                  {location.room && `, Room ${location.room}`}
+                  {location.floor && location.room && ', '}
+                  {location.room && `Room ${location.room}`}
                 </p>
                 {location.description && (
                   <p className="text-sm text-gray-500 mt-1 truncate">{location.description}</p>

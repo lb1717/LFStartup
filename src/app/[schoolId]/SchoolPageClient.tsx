@@ -37,6 +37,10 @@ export default function SchoolPageClient({
     }
   };
 
+  const handleUpdateItem = (updatedItem: LostItem) => {
+    setItems(items.map(item => item.id === updatedItem.id ? updatedItem : item));
+  };
+
   const handleResetFilters = () => {
     setSelectedLocation('');
     setSelectedCategory('');
@@ -78,8 +82,15 @@ export default function SchoolPageClient({
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">{university.name} Lost and Found</h1>
+        <div className="mb-8 flex flex-col items-center">
+          {university.logo && (
+            <img
+              src={university.logo}
+              alt={`${university.name} logo`}
+              className="h-32 w-auto mb-4"
+            />
+          )}
+          <h1 className="text-4xl font-bold text-center">{university.name} Found Items</h1>
         </div>
 
         {/* Search and Filter Button */}
@@ -87,7 +98,7 @@ export default function SchoolPageClient({
           <div className="relative flex-1">
             <input
               type="text"
-              placeholder="Search lost items..."
+              placeholder="Search found items..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -184,9 +195,16 @@ export default function SchoolPageClient({
           <LostItemsGrid
             items={filteredAndSortedItems}
             onDelete={handleDeleteItem}
+            onUpdate={handleUpdateItem}
             isAdmin={isAdmin}
             isLoading={false}
+            locations={locations}
           />
+        </div>
+
+        <div className="text-center my-8">
+          <p className="text-4xl font-semibold text-gray-700 mb-2">Didn't find it?</p>
+          <p className="text-2xl text-gray-600">Contact our locations</p>
         </div>
 
         <LocationsList locations={locations} />

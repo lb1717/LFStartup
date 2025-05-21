@@ -365,4 +365,56 @@ export async function verifyAdminCredentials(schoolId: string, username: string,
     console.error('Exception when verifying admin credentials:', error);
     return false;
   }
+}
+
+// Update a lost item
+export async function updateLostItem(item: LostItem): Promise<LostItem | null> {
+  try {
+    console.log(`Updating lost item: ${item.id}`);
+    
+    // Update the item in the database
+    const { data, error } = await supabase
+      .from('lost_items')
+      .update({
+        name: item.name,
+        location: item.location,
+        date: item.date,
+        description: item.description,
+        category: item.category,
+        status: item.status,
+        university_id: item.universityId,
+        school_name: item.schoolName
+      })
+      .eq('id', item.id)
+      .select();
+    
+    if (error) {
+      console.error('Error updating item:', error);
+      throw new Error(`Failed to update item: ${error.message}`);
+    }
+    
+    if (!data || data.length === 0) {
+      console.error('Item not found:', item.id);
+      return null;
+    }
+    
+    // Convert snake_case back to camelCase for frontend
+    const updatedItem: LostItem = {
+      id: data[0].id,
+      name: data[0].name,
+      location: data[0].location,
+      date: data[0].date,
+      description: data[0].description,
+      category: data[0].category,
+      status: data[0].status,
+      universityId: data[0].university_id,
+      schoolName: data[0].school_name
+    };
+    
+    console.log('Lost item updated successfully:', updatedItem.id);
+    return updatedItem;
+  } catch (error) {
+    console.error('Exception when updating lost item:', error);
+    return null;
+  }
 } 

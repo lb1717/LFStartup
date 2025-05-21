@@ -1,6 +1,7 @@
 'use client';
 
 import { LostItem } from '@/data/lostItems';
+import { Location } from '@/data/locations';
 import LostItemCard from './LostItemCard';
 import { useState, useEffect } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
@@ -8,8 +9,10 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 interface LostItemsGridProps {
   items: LostItem[];
   onDelete: (itemId: string) => Promise<void>;
+  onUpdate?: (updatedItem: LostItem) => void;
   isAdmin: boolean;
   isLoading?: boolean;
+  locations: Location[];
 }
 
 const ITEMS_PER_PAGE = 9; // 3 rows × 3 columns
@@ -29,7 +32,7 @@ function SkeletonCard() {
   );
 }
 
-export default function LostItemsGrid({ items, onDelete, isAdmin, isLoading = false }: LostItemsGridProps) {
+export default function LostItemsGrid({ items, onDelete, onUpdate, isAdmin, isLoading = false, locations }: LostItemsGridProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -92,7 +95,9 @@ export default function LostItemsGrid({ items, onDelete, isAdmin, isLoading = fa
               key={item.id}
               item={item}
               onDelete={onDelete}
+              onUpdate={onUpdate}
               isAdmin={isAdmin}
+              locations={locations}
             />
           ))
         )}
