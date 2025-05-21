@@ -33,16 +33,6 @@ function NavigationContent() {
     setShowAdminLogin(true);
   };
   
-  // Toggle settings menu
-  const toggleSettingsMenu = () => {
-    setShowSettingsMenu(!showSettingsMenu);
-  };
-  
-  // Close settings menu when clicking outside
-  const closeSettingsMenu = () => {
-    setShowSettingsMenu(false);
-  };
-  
   // On school pages, show only the home icon and settings icon if applicable
   if (isSchoolPage) {
     return (

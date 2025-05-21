@@ -7,6 +7,7 @@ import { Location } from '@/data/locations';
 import LostItemsGrid from '@/components/LostItemsGrid';
 import LocationsList from '@/components/LocationsList';
 import { deleteLostItem } from '@/lib/api';
+import Image from 'next/image';
 
 interface SchoolPageClientProps {
   university: University;
@@ -27,6 +28,8 @@ export default function SchoolPageClient({
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState<'title-asc' | 'title-desc' | 'location-asc' | 'location-desc' | 'newest' | 'oldest'>('newest');
+  const [showAddItemModal, setShowAddItemModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDeleteItem = async (itemId: string) => {
     try {
@@ -84,9 +87,11 @@ export default function SchoolPageClient({
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex flex-col items-center">
           {university.logo && (
-            <img
+            <Image
               src={university.logo}
               alt={`${university.name} logo`}
+              width={128}
+              height={128}
               className="h-32 w-auto mb-4"
             />
           )}
@@ -203,7 +208,7 @@ export default function SchoolPageClient({
         </div>
 
         <div className="text-center my-8">
-          <p className="text-4xl font-semibold text-gray-700 mb-2">Didn't find it?</p>
+          <p className="text-4xl font-semibold text-gray-700 mb-2">Didn&apos;t find it?</p>
           <p className="text-2xl text-gray-600">Contact our locations</p>
         </div>
 
