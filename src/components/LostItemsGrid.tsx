@@ -70,12 +70,10 @@ export default function LostItemsGrid({ items, onDelete, isAdmin, isLoading = fa
 
   return (
     <div className="space-y-6">
-      <div className="text-center text-gray-600">
-        {!isLoading && (
-          <span>
-            {totalItems} item{totalItems !== 1 ? 's' : ''} found
-          </span>
-        )}
+      <div className="flex justify-end">
+        <div className="text-sm text-gray-500">
+          Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems} items
+        </div>
       </div>
 
       <div 

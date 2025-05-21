@@ -47,7 +47,7 @@ function NavigationContent() {
   if (isSchoolPage) {
     return (
       <>
-        <nav className="w-full">
+        <nav className="w-full bg-white shadow-md">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="py-4 flex justify-between items-center">
               <Link 

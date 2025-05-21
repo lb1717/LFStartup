@@ -25,6 +25,8 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [sortBy, setSortBy] = useState<'title-asc' | 'title-desc' | 'location-asc' | 'location-desc' | 'newest' | 'oldest'>('newest');
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
   // Fetch items on component mount
   useEffect(() => {
@@ -35,9 +37,9 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
     fetchItems();
   }, [university.id]);
 
-  // Filter items when search query, items, location, or category changes
+  // Filter and sort items when search query, items, location, category, or sort changes
   useEffect(() => {
-    const filtered = items.filter(item => {
+    let filtered = items.filter(item => {
       const searchLower = searchQuery.toLowerCase();
       const nameMatch = item.name.toLowerCase().includes(searchLower);
       const descriptionMatch = item.description 
@@ -48,8 +50,29 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
       const matchesCategory = !selectedCategory || item.category === selectedCategory;
       return matchesSearch && matchesLocation && matchesCategory;
     });
+
+    // Apply sorting
+    filtered = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'title-asc':
+          return a.name.localeCompare(b.name);
+        case 'title-desc':
+          return b.name.localeCompare(a.name);
+        case 'location-asc':
+          return (a.location || '').localeCompare(b.location || '');
+        case 'location-desc':
+          return (b.location || '').localeCompare(a.location || '');
+        case 'newest':
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        case 'oldest':
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        default:
+          return 0;
+      }
+    });
+
     setFilteredItems(filtered);
-  }, [searchQuery, items, selectedLocation, selectedCategory]);
+  }, [searchQuery, items, selectedLocation, selectedCategory, sortBy]);
 
   const handleDeleteItem = async (itemId: string) => {
     try {
@@ -91,9 +114,9 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
         </div>
 
         {/* Search and Filters */}
-        <div className="w-full max-w-2xl space-y-4">
+        <div className="w-full max-w-2xl">
           {/* Search Bar */}
-          <div className="relative">
+          <div className="relative mb-4">
             <input
               type="text"
               placeholder="Search lost items..."
@@ -114,43 +137,6 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </div>
-
-          {/* Filters */}
-          <div className="flex gap-4">
-            <select
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">All Locations</option>
-              {locations.map(location => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">All Categories</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Accessories">Accessories</option>
-              <option value="Bags & Backpacks">Bags & Backpacks</option>
-              <option value="Books & Study Materials">Books & Study Materials</option>
-              <option value="Clothing & Shoes">Clothing & Shoes</option>
-              <option value="Headphones & Earbuds">Headphones & Earbuds</option>
-              <option value="ID Cards & Keys">ID Cards & Keys</option>
-              <option value="Jewelry">Jewelry</option>
-              <option value="Musical Instruments">Musical Instruments</option>
-              <option value="Sports Equipment">Sports Equipment</option>
-              <option value="Wallets & Purses">Wallets & Purses</option>
-              <option value="Water Bottles & Containers">Water Bottles & Containers</option>
-              <option value="Other">Other</option>
-            </select>
           </div>
         </div>
 
