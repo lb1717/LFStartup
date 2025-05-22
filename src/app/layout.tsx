@@ -17,14 +17,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_ID;
-  
   return (
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/images/monventa-logo.png" type="image/png" />
-        {gaId && <Analytics GA_MEASUREMENT_ID={gaId} />}
+        <Analytics />
       </head>
       <body className={inter.className}>
         <Navigation />
