@@ -24,7 +24,7 @@ export default function SchoolPageClient({ university, locations, isAdmin }: Sch
   const [items, setItems] = useState<LostItem[]>([]);
   const [filteredItems, setFilteredItems] = useState<LostItem[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
+  const [_showFilters, _setShowFilters] = useState(false);
   const [selectedLocation, _setSelectedLocation] = useState<string>('');
   const [selectedCategory, _setSelectedCategory] = useState<string>('');
   const [sortBy, _setSortBy] = useState<'title-asc' | 'title-desc' | 'location-asc' | 'location-desc' | 'newest' | 'oldest'>('newest');

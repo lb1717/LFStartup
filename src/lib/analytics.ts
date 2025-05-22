@@ -6,7 +6,7 @@ declare global {
       targetId: string,
       config?: {
         page_path?: string;
-        [key: string]: any;
+        [key: string]: string | number | boolean | undefined;
       }
     ) => void;
   }
