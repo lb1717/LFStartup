@@ -22,32 +22,48 @@ export default function LocationsList({ locations }: LocationsListProps) {
     }
   };
 
+  const handlePhoneClick = (e: React.MouseEvent, phoneNumber: string) => {
+    e.stopPropagation(); // Prevent the map click
+    window.location.href = `tel:${phoneNumber.replace(/[^0-9]/g, '')}`;
+  };
+
   return (
     <div className="mt-12 max-w-3xl mx-auto bg-white rounded-lg shadow">
       <div className="p-6">
-        <h2 className="text-2xl font-semibold mb-4">Campus Locations</h2>
+        <h2 className="text-3xl font-semibold mb-4 text-center">Campus Locations</h2>
         <div className="space-y-4">
           {locations.map((location) => (
             <div 
               key={location.id} 
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+              onClick={() => handlePinClick(location.exactAddress)}
             >
               <div className="flex-1 min-w-0 pr-4">
                 <h3 className="font-medium truncate">{location.name}</h3>
                 <p className="text-sm text-gray-600 truncate flex items-center gap-1">
                   <PhoneIcon className="h-4 w-4 text-gray-500" />
-                  {location.floor}
-                </p>
-                <p className="text-sm text-gray-600 truncate">
-                  {location.floor && location.room && ', '}
-                  {location.room && `Room ${location.room}`}
+                  <a 
+                    href={`tel:${location.building?.replace(/[^0-9]/g, '')}`}
+                    className="hover:text-blue-600 hover:underline"
+                    onClick={(e) => handlePhoneClick(e, location.building || '')}
+                  >
+                    {location.building}
+                  </a>
                 </p>
                 {location.description && (
                   <p className="text-sm text-gray-500 mt-1 truncate">{location.description}</p>
                 )}
+                {location.exactAddress && (
+                  <p className="text-sm text-gray-600 mt-1 truncate">
+                    {location.exactAddress}
+                  </p>
+                )}
               </div>
               <button
-                onClick={() => handlePinClick(location.exactAddress)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePinClick(location.exactAddress);
+                }}
                 className="flex-shrink-0 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors"
                 title="Open in Maps"
               >

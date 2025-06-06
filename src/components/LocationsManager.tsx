@@ -18,7 +18,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
   const [formData, setFormData] = useState({
     name: '',
-    building: '',
     floor: '',
     description: '',
     exactAddress: ''
@@ -42,7 +41,6 @@ export default function LocationsManager({ university, initialLocations }: Locat
   const resetForm = () => {
     setFormData({
       name: '',
-      building: '',
       floor: '',
       description: '',
       exactAddress: ''
@@ -65,8 +63,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
     setEditingLocation(location);
     setFormData({
       name: location.name,
-      building: location.building,
-      floor: location.floor || '',
+      floor: location.building || '',
       description: location.description || '',
       exactAddress: location.exactAddress || ''
     });
@@ -84,8 +81,8 @@ export default function LocationsManager({ university, initialLocations }: Locat
           id: editingLocation.id,
           name: formData.name,
           universityId: university.id,
-          building: formData.building,
-          floor: formData.floor || undefined,
+          building: formData.floor,
+          floor: undefined,
           description: formData.description || undefined,
           exactAddress: formData.exactAddress || undefined
         });
@@ -101,8 +98,8 @@ export default function LocationsManager({ university, initialLocations }: Locat
         const newLocation = await addLocation({
           name: formData.name,
           universityId: university.id,
-          building: formData.building,
-          floor: formData.floor || undefined,
+          building: formData.floor,
+          floor: undefined,
           description: formData.description || undefined,
           exactAddress: formData.exactAddress || undefined
         });
@@ -238,7 +235,7 @@ export default function LocationsManager({ university, initialLocations }: Locat
               {editingLocation ? 'Edit Location' : 'Add New Location'}
             </h2>
             
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="bg-white">
               <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Location Name
@@ -256,33 +253,18 @@ export default function LocationsManager({ university, initialLocations }: Locat
               </div>
               
               <div className="mb-4">
-                <label htmlFor="building" className="block text-sm font-medium text-gray-700 mb-1">
-                  Building
-                </label>
-                <input
-                  type="text"
-                  id="building"
-                  name="building"
-                  value={formData.building}
-                  onChange={handleInputChange}
-                  placeholder="e.g., Lobby Security Desk, Classroom 1A"
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-              
-              <div className="mb-4">
                 <label htmlFor="floor" className="block text-sm font-medium text-gray-700 mb-1">
                   Phone Number
                 </label>
                 <input
-                  type="text"
+                  type="tel"
                   id="floor"
                   name="floor"
                   value={formData.floor}
                   onChange={handleInputChange}
                   placeholder="e.g., (555) 555-1234"
                   required
+                  pattern="[0-9() -]+"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>

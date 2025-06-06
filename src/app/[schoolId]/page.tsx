@@ -6,6 +6,7 @@ import { Location } from '@/data/locations';
 import type { Metadata } from 'next';
 import { getUniversityById } from '@/lib/api';
 import Image from 'next/image';
+import CampusLocationsList from '@/components/CampusLocationsList';
 
 interface SchoolLandingPageProps {
   params: Promise<{
@@ -104,31 +105,7 @@ export default async function SchoolLandingPage({ params }: SchoolLandingPagePro
             </div>
             
             {/* Lost and Found Locations */}
-            <div className="w-full max-w-3xl mt-8">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold mb-4">Lost and Found Locations</h2>
-                
-                {locations.length === 0 ? (
-                  <p className="text-gray-500">No locations found for this university.</p>
-                ) : (
-                  <ul className="space-y-2">
-                    {locations.map((location: Location) => (
-                      <li key={location.id} className="p-3 border border-gray-200 rounded-md hover:bg-gray-50">
-                        <div className="font-medium">{location.name}</div>
-                        <div className="text-sm text-gray-500">
-                          <span>{location.building}</span>
-                          {location.floor && <span>, Floor {location.floor}</span>}
-                          {location.room && <span>, Room {location.room}</span>}
-                        </div>
-                        {location.exactAddress && (
-                          <div className="text-sm text-gray-500 mt-1">{location.exactAddress}</div>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
+            <CampusLocationsList locations={locations} />
           </div>
         </div>
       </main>
