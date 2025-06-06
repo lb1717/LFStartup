@@ -60,10 +60,28 @@ export async function getAllUniversities(): Promise<University[]> {
 export async function getLostItemsByUniversity(universityId: string): Promise<LostItem[]> {
   try {
     console.log(`Fetching lost items for university: ${universityId}`);
+
+    // First, delete expired items (50 days old)
+    const fiftyDaysAgo = new Date();
+    fiftyDaysAgo.setDate(fiftyDaysAgo.getDate() - 49); // Keep 49-day logic for buffer
+    
+    // Delete expired items
+    const { error: deleteError } = await supabase
+      .from('lost_items')
+      .delete()
+      .lt('date', fiftyDaysAgo.toISOString())
+      .eq('university_id', universityId);
+
+    if (deleteError) {
+      console.error('Error deleting expired items:', deleteError);
+    }
+
+    // Then fetch remaining items (less than 50 days old)
     const { data, error } = await supabase
       .from('lost_items')
       .select('*')
-      .eq('university_id', universityId);
+      .eq('university_id', universityId)
+      .gte('date', fiftyDaysAgo.toISOString());
     
     if (error) {
       console.error('Error fetching lost items:', error);
@@ -416,5 +434,55 @@ export async function updateLostItem(item: LostItem): Promise<LostItem | null> {
   } catch (error) {
     console.error('Exception when updating lost item:', error);
     return null;
+  }
+}
+
+// Delete expired items (older than 50 days)
+export async function deleteExpiredItems(): Promise<void> {
+  try {
+    console.log('Checking for expired items...');
+    
+    const fiftyDaysAgo = new Date();
+    fiftyDaysAgo.setDate(fiftyDaysAgo.getDate() - 49); // Keep 49-day logic for buffer
+    
+    const { error } = await supabase
+      .from('lost_items')
+      .delete()
+      .lt('date', fiftyDaysAgo.toISOString());
+    
+    if (error) {
+      console.error('Error deleting expired items:', error);
+      throw error;
+    }
+    
+    console.log('Expired items deleted successfully');
+  } catch (error) {
+    console.error('Exception when deleting expired items:', error);
+  }
+}
+
+// Check if an item is nearing expiry (40+ days old, expires at 50 days)
+export function isNearingExpiry(date: string): boolean {
+  try {
+    const itemDate = new Date(date);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - itemDate.getTime()) / (1000 * 60 * 60 * 24));
+    return diffDays >= 40 && diffDays < 49; // Keep 49-day logic for buffer
+  } catch (error) {
+    console.error('Error checking item expiry:', error);
+    return false;
+  }
+}
+
+// Get days until expiry (items expire at 50 days)
+export function getDaysUntilExpiry(date: string): number {
+  try {
+    const itemDate = new Date(date);
+    const now = new Date();
+    const diffDays = Math.floor((now.getTime() - itemDate.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.max(0, 49 - diffDays); // Keep 49-day logic for buffer
+  } catch (error) {
+    console.error('Error calculating days until expiry:', error);
+    return 0;
   }
 } 

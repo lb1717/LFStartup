@@ -3,8 +3,8 @@
 import { LostItem } from '@/data/lostItems';
 import { Location } from '@/data/locations';
 import { useState, useEffect } from 'react';
-import { PencilIcon, TrashIcon, CheckIcon } from '@heroicons/react/24/solid';
-import { updateLostItem } from '@/lib/api';
+import { PencilIcon, TrashIcon, CheckIcon, ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import { updateLostItem, isNearingExpiry, getDaysUntilExpiry } from '@/lib/api';
 
 interface LostItemCardProps {
   item: LostItem;
@@ -76,6 +76,9 @@ export default function LostItemCard({ item, onDelete, isAdmin, onUpdate, locati
   const [isEditing, setIsEditing] = useState(false);
   const [editedItem, setEditedItem] = useState(item);
   const [isSaving, setIsSaving] = useState(false);
+
+  const daysUntilExpiry = getDaysUntilExpiry(item.date);
+  const isExpiring = isNearingExpiry(item.date);
 
   useEffect(() => {
     // Update date display initially
@@ -352,10 +355,16 @@ export default function LostItemCard({ item, onDelete, isAdmin, onUpdate, locati
           </div>
         )}
 
-        <div className="flex items-center text-sm text-gray-500">
+        <div className="flex items-center text-sm text-gray-500 gap-2">
           <time dateTime={dateDisplay.machineReadable}>
             {dateDisplay.display}
           </time>
+          {isAdmin && isExpiring && (
+            <div className="px-2 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full flex items-center gap-1">
+              <ExclamationCircleIcon className="w-3 h-3" />
+              Expires in {daysUntilExpiry}d
+            </div>
+          )}
         </div>
       </div>
     </div>

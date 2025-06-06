@@ -23,8 +23,20 @@ function getCurrentDateTime() {
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
 
+function getMinDateTime() {
+  const date = new Date();
+  date.setDate(date.getDate() - 49);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 export default function AddItemForm({ universityId, schoolName, onAddItem, onCancel, isSubmitting = false }: AddItemFormProps) {
   const [locations, setLocations] = useState<Location[]>([]);
+  const [dateError, setDateError] = useState<string>('');
   const [formData, setFormData] = useState({
     name: '',
     location: '',
@@ -44,6 +56,18 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate date before submitting
+    const selectedDate = new Date(formData.date);
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() - 49);
+    
+    if (selectedDate < minDate) {
+      setDateError('Cannot add items older than 50 days');
+      return;
+    }
+    
+    setDateError('');
     await onAddItem({
       name: formData.name,
       location: formData.location,
@@ -58,6 +82,19 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    
+    if (name === 'date') {
+      const selectedDate = new Date(value);
+      const minDate = new Date();
+      minDate.setDate(minDate.getDate() - 49);
+      
+      if (selectedDate < minDate) {
+        setDateError('Cannot add items older than 50 days');
+      } else {
+        setDateError('');
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -112,10 +149,16 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
             name="date"
             value={formData.date}
             onChange={handleChange}
+            min={getMinDateTime()}
             max={getCurrentDateTime()}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
+            className={`mt-1 block w-full rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 ${
+              dateError ? 'border-red-300' : 'border-gray-300'
+            }`}
           />
+          {dateError && (
+            <p className="mt-1 text-sm text-red-600">{dateError}</p>
+          )}
         </div>
 
         <div>
