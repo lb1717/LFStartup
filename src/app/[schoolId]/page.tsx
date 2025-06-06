@@ -2,7 +2,6 @@ import { getAllUniversities, getLocationsByUniversity } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import UniversityImage from '@/components/UniversityImage';
-import { Location } from '@/data/locations';
 import type { Metadata } from 'next';
 import { getUniversityById } from '@/lib/api';
 import Image from 'next/image';

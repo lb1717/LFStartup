@@ -54,10 +54,28 @@ export default function AboutUs() {
         </div>
       </section>
 
+      {/* Logo Section */}
+      <section className="pt-12 pb-4 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="flex justify-center">
+            <div className="relative w-[200px] h-[60px]">
+              <Image
+                src="/images/monventa-textlogo-new.png"
+                alt="Monventa logo"
+                fill
+                className="object-contain"
+                priority
+                sizes="200px"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* What is Monventa Section */}
       <section 
         ref={whatRef}
-        className="py-20 bg-white"
+        className="pt-8 pb-20 bg-white"
         aria-labelledby="what-title"
       >
         <div className="max-w-4xl mx-auto px-4">
@@ -74,7 +92,7 @@ export default function AboutUs() {
               What is Monventa?
             </h2>
             <p className="text-lg text-gray-800 leading-relaxed">
-              Monventa is a digital lost and found platform built specifically for universities. With a focus on simplicity and efficiency, Monventa helps students and staff report, track, and recover lost items through one centralized, intuitive system. Instead of relying on outdated bulletin boards, spreadsheets, or uncoordinated inboxes, Monventa brings everything into one streamlined platform — fast, easy to use, and highly effective.
+              Monventa is a digital lost and found platform built specifically for universities. With a focus on simplicity and efficiency, Monventa helps students and staff report, track, and recover lost items through one centralized, intuitive system. Instead of relying on outdated bulletin boards, spreadsheets, or uncoordinated inboxes, Monventa brings everything into one streamlined platform &mdash; fast, easy to use, and highly effective.
             </p>
           </motion.div>
         </div>
@@ -101,10 +119,10 @@ export default function AboutUs() {
                 Our Mission
               </h2>
               <p className="text-lg text-gray-800 leading-relaxed mb-6">
-                At Monventa, our mission is to improve the campus experience by offering reliable support during one of the most stressful moments in student life: losing something important. Whether it's a laptop, ID card, or set of keys, we aim to make the recovery process as smooth and stress-free as possible.
+                At Monventa, our mission is to improve the campus experience by offering reliable support during one of the most stressful moments in student life: losing something important. Whether it&apos;s a laptop, ID card, or set of keys, we aim to make the recovery process as smooth and stress-free as possible.
               </p>
               <p className="text-lg text-gray-800 leading-relaxed">
-                But the problem extends beyond students. Faculty, campus security, and administrative staff often shoulder the burden of managing manual lost and found systems — typically unstructured, time-consuming, and difficult to scale. Monventa is built to alleviate that burden by digitizing and centralizing the entire process. Our platform simplifies operations for universities while improving results for students — making lost and found smarter, faster, and far more effective.
+                But the problem extends beyond students. Faculty, campus security, and administrative staff often shoulder the burden of managing manual lost and found systems &mdash; typically unstructured, time-consuming, and difficult to scale. Monventa is built to alleviate that burden by digitizing and centralizing the entire process. Our platform simplifies operations for universities while improving results for students &mdash; making lost and found smarter, faster, and far more effective.
               </p>
             </div>
             <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
