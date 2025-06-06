@@ -20,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="light">
       <head>
+        <meta name="color-scheme" content="light only" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/images/monventa-logo.png" type="image/png" />
         <Analytics />

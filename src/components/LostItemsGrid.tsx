@@ -19,7 +19,7 @@ const ITEMS_PER_PAGE = 9; // 3 rows × 3 columns
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden animate-pulse">
       <div className="p-4 space-y-3">
         <div className="h-6 bg-gray-200 rounded w-3/4"></div>
         <div className="space-y-2">

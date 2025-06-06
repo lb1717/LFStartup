@@ -3,10 +3,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force light mode and prevent system dark mode */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  color-scheme: light only;
+  color-scheme: light;
+  forced-color-adjust: none;
+}
+
+html {
+  background-color: white !important;
+  color: black !important;
+}
+
+/* Explicitly override dark mode */
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: white !important;
+    color: black !important;
+    color-scheme: light !important;
+  }
+
+  /* Force all text to stay dark */
+  * {
+    color: inherit !important;
+  }
+
+  /* Override background colors */
+  .bg-white {
+    background-color: white !important;
+  }
+
+  .text-gray-500 {
+    color: #6b7280 !important;
+  }
+
+  .text-gray-600 {
+    color: #4b5563 !important;
+  }
+
+  .text-gray-700 {
+    color: #374151 !important;
+  }
 }
 
 @theme inline {
@@ -14,16 +52,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-  html {
-    color-scheme: light;
-  }
 }
 
 body {

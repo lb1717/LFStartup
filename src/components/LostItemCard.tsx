@@ -154,7 +154,7 @@ export default function LostItemCard({ item, onDelete, isAdmin, onUpdate, locati
 
   if (showDeleteConfirm) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4 border-2 border-red-200">
+      <div className="bg-white rounded-lg border-2 border-red-200 shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4">
         <h3 className="text-lg font-semibold mb-4">Delete &ldquo;{item.name}&rdquo;?</h3>
         <p className="text-gray-600 mb-4">This action cannot be undone.</p>
         <div className="flex justify-end gap-3">
@@ -179,9 +179,9 @@ export default function LostItemCard({ item, onDelete, isAdmin, onUpdate, locati
 
   return (
     <div 
-      className={`relative bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 ease-in-out ${
-        isExpanded ? 'shadow-lg' : ''
-      } cursor-pointer`}
+      className={`relative bg-white rounded-lg border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.1)] overflow-hidden transition-all duration-200 ease-in-out ${
+        isExpanded ? 'shadow-lg ring-1 ring-gray-200' : ''
+      } cursor-pointer hover:shadow-lg hover:border-gray-300`}
       onClick={handleCardClick}
       role="button"
       aria-label={`Lost item: ${item.name}`}
