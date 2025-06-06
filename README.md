@@ -14,8 +14,15 @@ A web application for managing lost and found items at universities.
 Create a `.env.local` file in the root directory with the following variables:
 
 ```bash
+# Required - Public Variables (exposed to browser)
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_GA_ID=your-google-analytics-id
+NEXT_PUBLIC_ACCESS_CODE=your-access-code
+
+# Required - Private Variables (server-side only)
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+CLEANUP_SECRET_KEY=your-cleanup-secret-key
 ```
 
 You can find the Supabase values in your Supabase dashboard under Project Settings > API.

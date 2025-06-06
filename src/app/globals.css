@@ -9,6 +9,13 @@
   --foreground: #171717;
   color-scheme: light;
   forced-color-adjust: none;
+  
+  /* Accessible color variables */
+  --text-gray-500: #666666; /* Increased contrast from default gray-500 */
+  --text-gray-600: #545454; /* Increased contrast from default gray-600 */
+  --text-gray-700: #383838; /* Increased contrast from default gray-700 */
+  --text-blue-600: #2563eb; /* Increased contrast for links */
+  --text-red-600: #dc2626; /* Increased contrast for error messages */
 }
 
 html {
@@ -35,15 +42,15 @@ html {
   }
 
   .text-gray-500 {
-    color: #6b7280 !important;
+    color: var(--text-gray-500) !important;
   }
 
   .text-gray-600 {
-    color: #4b5563 !important;
+    color: var(--text-gray-600) !important;
   }
 
   .text-gray-700 {
-    color: #374151 !important;
+    color: var(--text-gray-700) !important;
   }
 }
 
@@ -58,4 +65,34 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Accessibility overrides */
+.text-gray-500 { color: var(--text-gray-500); }
+.text-gray-600 { color: var(--text-gray-600); }
+.text-gray-700 { color: var(--text-gray-700); }
+.text-blue-600 { color: var(--text-blue-600); }
+.text-red-600 { color: var(--text-red-600); }
+
+/* Enhanced focus styles */
+*:focus {
+  outline: 3px solid #2563eb !important;
+  outline-offset: 2px !important;
+}
+
+/* Focus style for interactive elements */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid #2563eb !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Focus style for elements within cards */
+.card:focus-within {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 2px !important;
 }

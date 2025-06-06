@@ -142,7 +142,14 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
         </div>
 
         <div>
-          <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date & Time Found</label>
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700">
+            Date & Time Found
+            <span className="text-red-600 ml-1" aria-hidden="true">*</span>
+            <span className="sr-only">Required</span>
+          </label>
+          <span id="date-description" className="text-sm text-gray-600">
+            Select the date and time when the item was found
+          </span>
           <input
             type="datetime-local"
             id="date"
@@ -152,23 +159,34 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
             min={getMinDateTime()}
             max={getCurrentDateTime()}
             required
+            aria-required="true"
+            aria-describedby="date-description"
             className={`mt-1 block w-full rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3 ${
               dateError ? 'border-red-300' : 'border-gray-300'
             }`}
           />
           {dateError && (
-            <p className="mt-1 text-sm text-red-600">{dateError}</p>
+            <p className="mt-1 text-sm text-red-600" role="alert">{dateError}</p>
           )}
         </div>
 
         <div>
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            Category
+            <span className="text-red-600 ml-1" aria-hidden="true">*</span>
+            <span className="sr-only">Required</span>
+          </label>
+          <span id="category-description" className="text-sm text-gray-600">
+            Select the category that best describes the item
+          </span>
           <select
             id="category"
             name="category"
             value={formData.category}
             onChange={handleChange}
             required
+            aria-required="true"
+            aria-describedby="category-description"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"
           >
             <option value="" disabled>Select a category</option>
@@ -189,13 +207,22 @@ export default function AddItemForm({ universityId, schoolName, onAddItem, onCan
         </div>
 
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            Description
+            <span className="text-red-600 ml-1" aria-hidden="true">*</span>
+            <span className="sr-only">Required</span>
+          </label>
+          <span id="description-help" className="text-sm text-gray-600">
+            Provide a detailed description of the item including any identifying marks or features
+          </span>
           <textarea
             id="description"
             name="description"
             value={formData.description}
             onChange={handleChange}
             required
+            aria-required="true"
+            aria-describedby="description-help"
             rows={3}
             placeholder="White Apple Pencil with intials marked in blue"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-4 py-3"

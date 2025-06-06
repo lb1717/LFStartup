@@ -14,9 +14,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className="light">
       <head>
@@ -26,8 +26,13 @@ export default function RootLayout({
         <Analytics />
       </head>
       <body className={inter.className}>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-0 focus:left-0 focus:z-50 focus:p-4 focus:bg-white focus:text-blue-600">
+          Skip to main content
+        </a>
         <Navigation />
-        {children}
+        <main id="main-content" className="min-h-screen">
+          {children}
+        </main>
         <Script id="clear-image-cache">
           {`
             // Force reload images with monventa in the filename

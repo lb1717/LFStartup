@@ -1,5 +1,5 @@
 import { Location } from '@/data/locations';
-import { MapPinIcon, PhoneIcon } from '@heroicons/react/24/solid';
+import { MapPinIcon, PhoneIcon } from '@heroicons/react/24/outline';
 
 interface LocationsListProps {
   locations: Location[];
@@ -7,54 +7,63 @@ interface LocationsListProps {
 
 export default function LocationsList({ locations }: LocationsListProps) {
   const handlePinClick = (exactAddress: string | undefined) => {
-    // Check if the address is a valid Google Maps URL or a regular address
     if (exactAddress) {
-      if (exactAddress.includes('google.com/maps') || exactAddress.includes('goo.gl/maps')) {
-        // If it's already a Google Maps URL, open it directly
-        window.open(exactAddress, '_blank');
-      } else {
-        // If it's a regular address, convert it to a Google Maps search URL
-        const encodedAddress = encodeURIComponent(exactAddress);
-        window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
-      }
-    } else {
-      alert('No valid location found');
+      const encodedAddress = encodeURIComponent(exactAddress);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank', 'noopener,noreferrer');
     }
   };
 
   const handlePhoneClick = (e: React.MouseEvent, phoneNumber: string) => {
-    e.stopPropagation(); // Prevent the map click
-    window.location.href = `tel:${phoneNumber.replace(/[^0-9]/g, '')}`;
+    e.stopPropagation();
+    const cleanNumber = phoneNumber.replace(/[^0-9]/g, '');
+    window.location.href = `tel:${cleanNumber}`;
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent, exactAddress: string | undefined) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handlePinClick(exactAddress);
+    }
   };
 
   return (
-    <div className="mt-12 max-w-3xl mx-auto bg-white rounded-lg shadow">
+    <div 
+      className="mt-12 max-w-3xl mx-auto bg-white rounded-lg shadow"
+      role="region"
+      aria-labelledby="locations-heading"
+    >
       <div className="p-6">
-        <h2 className="text-3xl font-semibold mb-4 text-center">Campus Locations</h2>
+        <h2 id="locations-heading" className="text-3xl font-semibold mb-4 text-center text-gray-900">Campus Locations</h2>
         <div className="space-y-4">
           {locations.map((location) => (
             <div 
               key={location.id} 
-              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+              className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer focus-within:ring-2 focus-within:ring-blue-500"
               onClick={() => handlePinClick(location.exactAddress)}
+              onKeyPress={(e) => handleKeyPress(e, location.exactAddress)}
+              tabIndex={0}
+              role="button"
+              aria-label={`View location: ${location.name}`}
             >
               <div className="flex-1 min-w-0 pr-4">
-                <h3 className="font-medium truncate">{location.name}</h3>
-                <p className="text-sm text-gray-600 truncate flex items-center gap-1">
-                  <PhoneIcon className="h-4 w-4 text-gray-500" />
+                <h3 className="font-medium text-gray-900">{location.name}</h3>
+                <div className="text-sm text-gray-700 flex items-center gap-1">
+                  <PhoneIcon className="h-4 w-4 text-gray-500" aria-hidden="true" />
                   <a 
                     href={`tel:${location.building?.replace(/[^0-9]/g, '')}`}
-                    className="hover:text-blue-600 hover:underline"
+                    className="hover:text-blue-700 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                     onClick={(e) => handlePhoneClick(e, location.building || '')}
+                    aria-label={`Call ${location.name} at ${location.building}`}
                   >
                     {location.building}
                   </a>
-                </p>
+                </div>
                 {location.description && (
-                  <p className="text-sm text-gray-500 mt-1 truncate">{location.description}</p>
+                  <p className="text-sm text-gray-700 mt-1">{location.description}</p>
                 )}
                 {location.exactAddress && (
-                  <p className="text-sm text-gray-600 mt-1 truncate">
+                  <p className="text-sm text-gray-700 mt-1">
+                    <span className="sr-only">Address: </span>
                     {location.exactAddress}
                   </p>
                 )}
@@ -64,10 +73,10 @@ export default function LocationsList({ locations }: LocationsListProps) {
                   e.stopPropagation();
                   handlePinClick(location.exactAddress);
                 }}
-                className="flex-shrink-0 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors"
-                title="Open in Maps"
+                className="flex-shrink-0 p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+                aria-label={`Open ${location.name} in Maps`}
               >
-                <MapPinIcon className="h-6 w-6" />
+                <MapPinIcon className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           ))}
