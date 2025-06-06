@@ -188,10 +188,10 @@ export default function AboutUs() {
             </div>
             <div className="mt-12 text-lg text-gray-800 leading-relaxed text-center">
               <p className="mb-6">
-                As students ourselves, we understand how frustrating and disruptive it can be to lose something important on campus. That's why we set out to create a tool that makes the process of finding and returning lost items easier for everyone. We've designed and coded every part of Monventa ourselves — with a focus on simplicity, reliability, and real impact.
+                As students ourselves, we understand how frustrating and disruptive it can be to lose something important on campus. That&apos;s why we set out to create a tool that makes the process of finding and returning lost items easier for everyone. We&apos;ve designed and coded every part of Monventa ourselves &mdash; with a focus on simplicity, reliability, and real impact.
               </p>
               <p className="font-medium text-gray-900">
-                Monventa is a product built by students, for students — and we're excited to keep growing it to help campuses everywhere.
+                Monventa is a product built by students, for students &mdash; and we&apos;re excited to keep growing it to help campuses everywhere.
               </p>
             </div>
           </motion.div>
