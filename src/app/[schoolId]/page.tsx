@@ -93,10 +93,10 @@ export default async function SchoolLandingPage({ params }: SchoolLandingPagePro
                       className="w-full h-auto rounded-lg shadow-md"
                     />
                     <p className="mt-4 text-lg font-medium">
-                      {step === 1 && 'Log in to school portal'}
-                      {step === 2 && 'Look for your lost item'}
-                      {step === 3 && 'Locate your item'}
-                      {step === 4 && 'Collect item at location'}
+                      {step === 1 && 'Admin logs recovered items'}
+                      {step === 2 && 'Users browse recovered items'}
+                      {step === 3 && 'Contact relevant location'}
+                      {step === 4 && 'Lost item is returned to user'}
                     </p>
                   </div>
                 ))}

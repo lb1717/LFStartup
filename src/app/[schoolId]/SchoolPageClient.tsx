@@ -86,14 +86,16 @@ export default function SchoolPageClient({
         <div className="mb-8 flex flex-col items-center">
           {university.logo && (
             <Image
-              src={university.logo}
+              src={university.logo.trim()}
               alt={`${university.name} logo`}
               width={128}
               height={128}
               className="h-32 w-auto mb-4"
             />
           )}
-          <h1 className="text-4xl font-bold text-center">{university.name} Found Items</h1>
+          <h1 className="text-4xl font-bold text-center">
+            Found Items at <span className="underline">{university.name}</span>
+          </h1>
         </div>
 
         {/* Search and Filter Button */}

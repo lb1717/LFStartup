@@ -41,7 +41,7 @@ function NavigationContent() {
             <div className="py-4 flex justify-between items-center">
               <Link 
                 href="/"
-                className="inline-block -ml-4"
+                className="inline-block"
                 aria-label="Go to home page"
               >
                 <Image 
@@ -99,7 +99,7 @@ function NavigationContent() {
     <nav className="w-full bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center -ml-4">
+          <div className="flex items-center">
             <Link href="/" className="flex-shrink-0">
               <Image 
                 src="/images/monventa-textlogo-new.png"
@@ -117,7 +117,7 @@ function NavigationContent() {
                 pathname === '/' ? 'font-bold' : 'font-normal'
               } hover:text-gray-600 transition-colors`}
             >
-              Home
+              Portal
             </Link>
             <Link 
               href="/aboutus"
