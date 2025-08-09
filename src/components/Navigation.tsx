@@ -2,16 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import AdminLoginModal from './AdminLoginModal';
 import { Suspense } from 'react';
+import { isAdminForSchool, clearAdminSession, getCurrentAdminUsername } from '@/lib/adminSession';
 
 function NavigationContent() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminUsername, setAdminUsername] = useState<string | null>(null);
   
   // Check if we're on a school page
   const isSchoolPage = /^\/[^\/]+(?:\/portal)?$/.test(pathname) && pathname !== '/aboutus';
@@ -25,11 +26,38 @@ function NavigationContent() {
 
   // Check admin status on client side only
   useEffect(() => {
-    setIsAdmin(searchParams.get('admin') === 'true');
-  }, [searchParams]);
+    if (schoolIdFromPath) {
+      const adminStatus = isAdminForSchool(schoolIdFromPath);
+      setIsAdmin(adminStatus);
+      if (adminStatus) {
+        setAdminUsername(getCurrentAdminUsername());
+      } else {
+        setAdminUsername(null);
+      }
+    } else {
+      setIsAdmin(false);
+      setAdminUsername(null);
+    }
+  }, [schoolIdFromPath, pathname]);
 
   const handleAdminLoginClick = () => {
-    setShowAdminLogin(true);
+    if (isAdmin) {
+      // If already logged in, go to portal
+      window.location.href = `/${schoolIdFromPath}/portal`;
+    } else {
+      // If not logged in, show login modal
+      setShowAdminLogin(true);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    // Redirect to portal after successful login
+    window.location.href = `/${schoolIdFromPath}/portal`;
+  };
+
+  const handleLogout = () => {
+    clearAdminSession();
+    window.location.reload();
   };
   
   // On school pages, show only the home icon and settings icon if applicable
@@ -57,17 +85,23 @@ function NavigationContent() {
                 {isAdmin && isSchoolPortalPage && (
                   <div className="flex gap-2">
                     <Link
-                      href={`/${schoolIdFromPath}/portal/add-item?admin=true`}
+                      href={`/${schoolIdFromPath}/portal/add-item`}
                       className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
                     >
                       Add Item
                     </Link>
                     <Link
-                      href={`/${schoolIdFromPath}/manage-locations?admin=true`}
+                      href={`/${schoolIdFromPath}/manage-locations`}
                       className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
                     >
                       Manage Locations
                     </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                    >
+                      Admin Logout
+                    </button>
                   </div>
                 )}
                 
@@ -88,6 +122,7 @@ function NavigationContent() {
           <AdminLoginModal
             schoolId={schoolIdFromPath}
             onClose={() => setShowAdminLogin(false)}
+            onLoginSuccess={handleLoginSuccess}
           />
         )}
       </>
@@ -136,19 +171,7 @@ function NavigationContent() {
 
 export default function Navigation() {
   return (
-    <Suspense fallback={
-      <nav className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex items-center px-2 py-2">
-                <span className="text-xl font-semibold text-gray-300">Loading...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    }>
+    <Suspense fallback={<div className="w-full bg-white shadow-md h-16"></div>}>
       <NavigationContent />
     </Suspense>
   );

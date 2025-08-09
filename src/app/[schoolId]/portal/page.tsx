@@ -26,8 +26,8 @@ export async function generateMetadata(
   };
 }
 
-export default async function SchoolPortalPage({ params, searchParams }: SchoolPageProps) {
-  const [{ schoolId }, resolvedSearchParams] = await Promise.all([params, searchParams]);
+export default async function SchoolPortalPage({ params }: SchoolPageProps) {
+  const { schoolId } = await params;
   
   // Fetch universities and find the current one
   const universities = await getAllUniversities();
@@ -41,8 +41,9 @@ export default async function SchoolPortalPage({ params, searchParams }: SchoolP
   const schoolLostItems = await getLostItemsByUniversity(schoolId);
   const locations = await getLocationsByUniversity(schoolId);
 
-  // Simple admin check from URL
-  const isAdmin = resolvedSearchParams.admin === 'true';
+  // Admin check will be handled on the client side using session
+  // We pass false as default, the client component will check the session
+  const isAdmin = false;
 
   return (
     <SchoolPageClient 

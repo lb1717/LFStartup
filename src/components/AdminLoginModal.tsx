@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { verifyAdminCredentials } from '@/lib/api';
+import { createAdminSession } from '@/lib/adminSession';
 
 interface AdminLoginModalProps {
   schoolId: string;
   onClose: () => void;
+  onLoginSuccess: () => void;
 }
 
-export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalProps) {
+export default function AdminLoginModal({ schoolId, onClose, onLoginSuccess }: AdminLoginModalProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -28,14 +30,12 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
       const isValid = await verifyAdminCredentials(schoolId, username, password);
       
       if (isValid) {
-        // Construct the URL we want to navigate to
-        const portalUrl = `/${schoolId}/portal?admin=true`;
+        // Create admin session
+        createAdminSession(schoolId, username);
         
-        // Use window.location for a hard navigation to prevent flashing
-        window.location.href = portalUrl;
-        
-        // Keep the loading state and modal visible until navigation completes
-        return;
+        // Keep modal open and loading while redirecting
+        // Don't close modal or call onClose() - let the redirect happen
+        onLoginSuccess();
       } else {
         setError('Invalid username or password');
         setIsLoading(false);
@@ -59,6 +59,7 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
+            disabled={isLoading}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -78,6 +79,7 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
               onChange={(e) => setUsername(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -92,6 +94,7 @@ export default function AdminLoginModal({ schoolId, onClose }: AdminLoginModalPr
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
+              disabled={isLoading}
             />
           </div>
 

@@ -1,6 +1,7 @@
 import { getAllUniversities, getLocationsByUniversity } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import LocationsManager from '@/components/LocationsManager';
+import ProtectedAdminRoute from '@/components/ProtectedAdminRoute';
 
 interface ManageLocationsPageProps {
   params: Promise<{
@@ -29,7 +30,11 @@ export default async function ManageLocationsPage({ params }: ManageLocationsPag
     const locations = await getLocationsByUniversity(schoolId);
     console.log(`Found ${locations.length} locations for ${university.name}`);
 
-    return <LocationsManager university={university} initialLocations={locations} />;
+    return (
+      <ProtectedAdminRoute schoolId={schoolId}>
+        <LocationsManager university={university} initialLocations={locations} />
+      </ProtectedAdminRoute>
+    );
   } catch (error) {
     console.error('Error in ManageLocationsPage:', error);
     throw error; // Re-throw to let Next.js handle the error

@@ -1,6 +1,7 @@
 import { getAllUniversities } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import AddItemPageClient from './AddItemPageClient';
+import ProtectedAdminRoute from '@/components/ProtectedAdminRoute';
 
 interface AddItemPageProps {
   params: Promise<{
@@ -25,7 +26,11 @@ export default async function AddItemPage({ params }: AddItemPageProps) {
       notFound();
     }
 
-    return <AddItemPageClient university={university} />;
+    return (
+      <ProtectedAdminRoute schoolId={schoolId}>
+        <AddItemPageClient university={university} />
+      </ProtectedAdminRoute>
+    );
   } catch (error) {
     console.error('Error in AddItemPage:', error);
     throw error;

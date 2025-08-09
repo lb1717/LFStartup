@@ -1,11 +1,11 @@
 'use client';
 
-import { University } from '@/data/universities';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { University } from '@/data/universities';
+import { LostItem } from '@/data/lostItems';
 import AddItemForm from '@/components/AddItemForm';
 import { addLostItem } from '@/lib/api';
-import { LostItem } from '@/data/lostItems';
 
 interface AddItemPageClientProps {
   university: University;
@@ -26,8 +26,8 @@ export default function AddItemPageClient({ university }: AddItemPageClientProps
       });
       
       if (newItem) {
-        // Navigate back to the portal page with a refresh
-        router.replace(`/${university.id}/portal?admin=true`);
+        // Navigate back to the portal page
+        router.replace(`/${university.id}/portal`);
       }
     } catch (error) {
       console.error('Failed to add item:', error);

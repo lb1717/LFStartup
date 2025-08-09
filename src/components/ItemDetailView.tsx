@@ -1,8 +1,8 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { LostItem } from '@/data/lostItems';
-import { useSearchParams } from 'next/navigation';
-import { useState, Suspense } from 'react';
+import { isAdminForSchool } from '@/lib/adminSession';
 
 interface ItemDetailViewProps {
   item: LostItem;
@@ -10,11 +10,16 @@ interface ItemDetailViewProps {
 }
 
 function ItemDetailContent({ item, onDelete }: ItemDetailViewProps) {
-  const searchParams = useSearchParams();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const isAdmin = searchParams.get('admin') === 'true';
+  useEffect(() => {
+    setMounted(true);
+    const adminStatus = isAdminForSchool(item.universityId);
+    setIsAdmin(adminStatus);
+  }, [item.universityId]);
 
   const handleDelete = async () => {
     if (showDeleteConfirm) {
@@ -32,6 +37,10 @@ function ItemDetailContent({ item, onDelete }: ItemDetailViewProps) {
     }
   };
 
+  if (!mounted) {
+    return null;
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-8 max-w-2xl w-full mx-4">
@@ -48,39 +57,49 @@ function ItemDetailContent({ item, onDelete }: ItemDetailViewProps) {
           )}
         </div>
 
-        <div className="space-y-4">
-          <p className="text-gray-600">{item.description}</p>
-          
-          <div>
-            <h3 className="font-semibold mb-1">Location</h3>
-            <p className="text-gray-600">{item.location}</p>
+        {showDeleteConfirm && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-800 mb-2">Are you sure you want to delete this item?</p>
+            <div className="flex gap-2">
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Yes, Delete'}
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-          
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h3 className="font-semibold mb-1">Date Found</h3>
-            <p className="text-gray-600">{new Date(item.date).toLocaleDateString()}</p>
+            <h3 className="text-lg font-semibold mb-2">Details</h3>
+            <div className="space-y-2">
+              <p><span className="font-medium">Name:</span> {item.name}</p>
+              <p><span className="font-medium">Category:</span> {item.category}</p>
+              <p><span className="font-medium">Location:</span> {item.location || 'Unknown'}</p>
+              <p><span className="font-medium">Date Found:</span> {new Date(item.date).toLocaleDateString()}</p>
+              <p><span className="font-medium">Status:</span> 
+                <span className={`ml-2 px-2 py-1 rounded text-sm ${
+                  item.status === 'claimed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {item.status === 'claimed' ? 'Claimed' : 'Unclaimed'}
+                </span>
+              </p>
+            </div>
           </div>
 
-          {showDeleteConfirm && (
-            <div className="mt-6 p-4 bg-red-50 rounded-lg">
-              <p className="text-red-700 mb-4">Are you sure you want to delete this item?</p>
-              <div className="flex justify-end gap-4">
-                <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={isDeleting}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-red-400"
-                >
-                  {isDeleting ? 'Deleting...' : 'Confirm Delete'}
-                </button>
-              </div>
-            </div>
-          )}
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Description</h3>
+            <p className="text-gray-700">{item.description || 'No description provided.'}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -88,21 +107,5 @@ function ItemDetailContent({ item, onDelete }: ItemDetailViewProps) {
 }
 
 export default function ItemDetailView(props: ItemDetailViewProps) {
-  return (
-    <Suspense fallback={
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-8 max-w-2xl w-full mx-4">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-6"></div>
-            <div className="space-y-4">
-              <div className="h-4 bg-gray-200 rounded w-full"></div>
-              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    }>
-      <ItemDetailContent {...props} />
-    </Suspense>
-  );
+  return <ItemDetailContent {...props} />;
 } 

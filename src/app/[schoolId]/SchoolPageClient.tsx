@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { University } from '@/data/universities';
 import { LostItem } from '@/data/lostItems';
 import { Location } from '@/data/locations';
@@ -8,19 +8,20 @@ import LostItemsGrid from '@/components/LostItemsGrid';
 import LocationsList from '@/components/LocationsList';
 import { deleteLostItem } from '@/lib/api';
 import Image from 'next/image';
+import { isAdminForSchool } from '@/lib/adminSession';
 
 interface SchoolPageClientProps {
   university: University;
   initialItems: LostItem[];
   locations: Location[];
-  isAdmin: boolean;
+  isAdmin: boolean; // This will be ignored, we'll check session on client side
 }
 
 export default function SchoolPageClient({ 
   university, 
   initialItems, 
   locations,
-  isAdmin 
+  isAdmin: _serverIsAdmin // Rename to avoid confusion
 }: SchoolPageClientProps) {
   const [items, setItems] = useState(initialItems);
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,6 +29,15 @@ export default function SchoolPageClient({
   const [selectedLocation, setSelectedLocation] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortBy, setSortBy] = useState<'title-asc' | 'title-desc' | 'location-asc' | 'location-desc' | 'newest' | 'oldest'>('newest');
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Check admin status on client side
+  useEffect(() => {
+    setMounted(true);
+    const adminStatus = isAdminForSchool(university.id);
+    setIsAdmin(adminStatus);
+  }, [university.id]);
 
   const handleDeleteItem = async (itemId: string) => {
     try {
@@ -79,6 +89,18 @@ export default function SchoolPageClient({
           return 0;
       }
     });
+
+  if (!mounted) {
+    return (
+      <main className="min-h-screen p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen p-8">
