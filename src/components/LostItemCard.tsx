@@ -82,8 +82,12 @@ export default function LostItemCard({ item, onDelete, isAdmin, onUpdate, locati
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      if (!isEditing) {
+      // Only prevent default and toggle expansion if we're not editing and not in an input field
+      const target = e.target as HTMLElement;
+      const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT';
+      
+      if (!isEditing && !isInputField) {
+        e.preventDefault();
         setIsExpanded(!isExpanded);
       }
     }
