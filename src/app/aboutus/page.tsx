@@ -14,7 +14,7 @@ export default function AboutUs() {
   // Typewriter effect for the title
   const [displayText, setDisplayText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const fullText = 'We service universities, schools, gyms and many other organizations. Get in touch for pricing and implementation.';
+  const fullText = 'We service companies, universities, schools and many other organizations. Get in touch for pricing and implementation.';
   
   useEffect(() => {
     let index = 0;
