@@ -346,8 +346,8 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Meet the Founders Section */}
-      <section 
+      {/* Meet the Founders Section - HIDDEN FOR NOW */}
+      {/* <section 
         ref={foundersRef}
         className="py-20 bg-white"
         aria-labelledby="founders-title"
@@ -403,7 +403,7 @@ export default function AboutUs() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 } 
